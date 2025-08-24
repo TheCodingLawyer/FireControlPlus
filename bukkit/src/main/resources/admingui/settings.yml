@@ -1,0 +1,16 @@
+# AdminGUI Settings
+# Runtime settings and toggles
+
+# Maintenance mode
+maintenance: false
+
+# GUI settings
+gui_enabled: true
+gui_sound_enabled: true
+
+# Chat settings
+chat_enabled: true
+broadcast_enabled: true
+
+# Permission settings
+permission_system_enabled: true

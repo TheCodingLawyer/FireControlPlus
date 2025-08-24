@@ -1,0 +1,15 @@
+# AdminGUI Permissions
+# Permission nodes and groups
+
+# Default permissions
+default_permissions:
+  - admingui.use
+
+# Admin permissions
+admin_permissions:
+  - admingui.*
+  - admingui.admin
+  - admingui.ban
+  - admingui.kick
+  - admingui.mute
+  - admingui.warn

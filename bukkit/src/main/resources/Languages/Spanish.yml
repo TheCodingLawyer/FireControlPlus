@@ -1,0 +1,389 @@
+#       ----------- + AdminGUI creado por Ziga Zajc + -----------   #
+#                                                                   #
+#                                 Español                           #
+#                                                                   #
+#       ----------- + ------------------------------- + ---------   #
+#       Tú puedes usar estos colores:
+#                ________________________
+#               | código: |   color:     |
+#               |________________________|
+#               |     &0  | Negro        |
+#               |     &1  | Azul oscuro  |
+#               |     &2  | Verde oscuro |
+#               |     &3  | Agua oscuro  |
+#               |     &4  | Rojo oscuro  |
+#               |     &5  | Lila oscuro  |
+#               |     &6  | Oro          |
+#               |     &7  | Gris         |
+#               |     &8  | Gris oscuro  |
+#               |     &9  | Azul         |
+#               |     &a  | Verde        |
+#               |     &b  | Agua         |
+#               |     &c  | Rojo         |
+#               |     &d  | Lila claro   |
+#               |     &e  | Amarillo     |
+#               |     &f  | Blanco       |
+#               |     &k  | Ofuscado     |
+#               |     &l  | Negrita      |
+#               |     &m  | Tachado      |
+#               |     &n  | Subrayado    |
+#               |     &o  | Itálica      |
+#               |     &r  | Reiniciar    |
+#               |________________________|
+#----------------------------------------------------------
+#                         Título
+#----------------------------------------------------------
+prefix: "&7[&cConsole&7] "
+#----------------------------------------------------------
+#----------------------------------------------------------
+#                       Comandos
+#----------------------------------------------------------
+permission: "&cNo tienes permisos para hacer eso."
+is_not_a_player: "&c{player} no es un jugador."
+is_not_a_number: "&c{number} no es un número."
+wrong_arguments: "&cSolo puedes usar /admin o /admin <jugador>."
+wrong_chat_arguments: "&cSolo puedes usar /adminchat mute."
+wrong_initialize: "&cSolo puedes usar /admin initialize gui o /admin initialize players."
+wrong_rank_arguments: "&cSolo puedes usar /admin rank set <jugador> <rango> o /admin rank <up/down> <jugador>."
+wrong_permission_arguments: "&cSolo puedes usar /admin permission <add/remove> <jugador> <permiso>."
+wrong_check_arguments: "&cSolo puedes usar /admin check <jugador>."
+vault_required: "&cTu servidor no tiene instalado Vault para completar la acción."
+vanish_required: "&cTu servidor no tiene instalado Super Vanish o Premium Vanish para completar la acción."
+#----------------------------------------------------------
+#                    Nombre de los inventarios
+#----------------------------------------------------------
+inventory_main: "&4&lPANEL DE ADMIN &c&lPremium"
+inventory_player: "&5&l{player}"
+inventory_world: "&2&lMundo"
+inventory_players: "&1&lJugadores"
+inventory_plugins: "&e&lPlugins"
+inventory_commands: "&2&lComandos"
+inventory_unban: "&c&lDesbanear"
+inventory_unmute: "&c&lDesilenciar"
+inventory_actions: "&9&lAcciones &2&l{player}"
+inventory_kick: "&8&lExpulsar &2&l{player}"
+inventory_ban: "&8&lBanear &2&l{player}"
+inventory_potions: "&c&lPociones &2&l{player}"
+inventory_spawner: "&8&lHacer aparecer cerca de &2&l{player}"
+inventory_money: "&2&lDinero &2&l{player}"
+inventory_money_give: "&2&lDar dinero a &2&l{player}"
+inventory_money_set: "&2&lFijar dinero de &9&l{player}"
+inventory_money_take: "&2&lQuitar dinero a &2&l{player}"
+inventory_inventory: "&a&lInventario de &2&l{player}"
+inventory_ender_chest: "&5&lEnder Chest de &2&l{player}"
+#----------------------------------------------------------
+#                       Admin GUI
+#----------------------------------------------------------
+main_player: "&5&l{player}"
+main_world: "&2&lMundo"
+main_players: "&9&lJugadores"
+main_plugins: "&6&lPlugins"
+main_maintenance_mode: "&c&lModo de mantenimiento"
+main_unban_players: "&c&lDesbanear jugadores"
+main_language: "&b&l"
+main_quit: "&c&lSalir"
+#----------------------------------------------------------
+#                      Player GUI
+#----------------------------------------------------------
+player_info: "&2&l{player}"
+player_heal: "&e&lCurar"
+player_feed: "&7&lAlimentar"
+player_survival: "&a&lSupervivencia"
+player_adventure: "&2&lAventura"
+player_creative: "&3&lCreativo"
+player_spectator: "&9&lEspectador"
+player_god_enabled: "&a&lModo dios"
+player_god_disabled: "&c&lModo dios"
+player_potions: "&c&lPociones"
+player_spawner: "&8&lHacer aparecer cerca de él"
+player_kill: "&8&lMatar"
+player_burn: "&c&lQuemar"
+player_lightning: "&5&lTirarle un rayo"
+player_firework: "&4&lFuegos artificiales"
+player_money: "&2&lDinero"
+player_vanish_enabled: "&a&lInvisible"
+player_vanish_disabled: "&c&lInvisible"
+player_custom: "&6&lComandos customizados"
+player_chat_color: "&3&lChat &6&lColor"
+player_back: "&c&lVolver"
+#----------------------------------------------------------
+#                       World GUI
+#----------------------------------------------------------
+world_day: "&e&lDia"
+world_night: "&8&lNoche"
+world_thunder: "&9&lTormenta"
+world_rain: "&3&lLluvia"
+world_clear: "&b&lDespejado"
+world_back: "&c&lVolver"
+#----------------------------------------------------------
+#                     Players GUI
+#----------------------------------------------------------
+players_color: "&2&l{player}"
+players_more: "&cClick aquí para más acciones"
+players_previous: "&c&lAnterior"
+players_page: "&a&lPágina"
+players_next: "&2&lSiguiente"
+players_back: "&c&lVolver"
+#----------------------------------------------------------
+#                     Plugins GUI
+#----------------------------------------------------------
+plugins_back: "&c&lVolver"
+#----------------------------------------------------------
+#                     Commands GUI
+#----------------------------------------------------------
+commands_back: "&c&lVolver"
+#----------------------------------------------------------
+#                     Unban GUI
+#----------------------------------------------------------
+unban_color: "&2&l{player}"
+unban_more: "&cClick aquí para desbanear este jugador"
+unban_previous: "&c&lAnterior"
+unban_page: "&a&lPágina"
+unban_next: "&2&lSiguiente"
+unban_back: "&c&lVolver"
+#----------------------------------------------------------
+#                     Unban GUI
+#----------------------------------------------------------
+unmute_color: "&2&l{player}"
+unmute_more: "&cClick aquí para desbanear este jugador"
+unmute_previous: "&c&lAnterior"
+unmute_page: "&a&lPágina"
+unmute_next: "&2&lSiguiente"
+unmute_back: "&c&lVolver"
+#----------------------------------------------------------
+#                 Players Settings GUI
+#----------------------------------------------------------
+players_settings_info: "&2&l{player}"
+players_settings_actions: "&9&lAcciones"
+players_settings_money: "&2&lDinero"
+players_settings_kick_player: "&8&lEchar jugador"
+players_settings_ban_player: "&8&lBanear jugador"
+players_settings_back: "&c&lVolver"
+#----------------------------------------------------------
+#                   Actions GUI
+#----------------------------------------------------------
+actions_heal: "&e&lCurar"
+actions_feed: "&7&lAlimentar"
+actions_info: "&2&l{player}"
+actions_survival: "&a&lSupervivencia (jugadores)"
+actions_adventure: "&2&lAventura (admins)"
+actions_creative: "&3&lCreativo (admins)"
+actions_spectator: "&9&lEspectador (admins)"
+actions_teleport_to_player: "&d&lTeletransportarte hasta jugador"
+actions_kill_player: "&8&lMatar jugador"
+actions_burn_player: "&c&lQuemar jugador"
+actions_teleport_player_to_you: "&d&lTeletransportar jugador hasta ti"
+actions_god_enabled: "&a&lModo dios"
+actions_god_disabled: "&c&Modo dios"
+actions_potions: "&c&lPociones"
+actions_spawner: "&8&lHacer aparecer cerca de él"
+actions_inventory: "&a&lInventario"
+actions_ender_chest: "&5&lEnder Chest"
+actions_vanish_enabled: "&a&lInvisible"
+actions_vanish_disabled: "&c&lInvisible"
+actions_lightning: "&5&lTirarle un rayo"
+actions_firework: "&4&lFuegos artificiales"
+actions_fakeop: "&c&lAdmin falso"
+actions_custom: "&6&lComandos customizados"
+actions_chat_color: "&3&lChat &6&lColor"
+actions_freeze_enabled: "&b&lFreeze"
+actions_freeze_disabled: "&c&lFreeze"
+actions_back: "&c&lVolver"
+#----------------------------------------------------------
+#                       Kick GUI
+#----------------------------------------------------------
+kick: "&4Tú has sido expulsado por "
+kick_back: "&c&lVolver"
+#----------------------------------------------------------
+#                       Ban GUI
+#----------------------------------------------------------
+ban_time: "&4Has sido suspendido por {reason}\n&cTu suspensión expira el &c&l{time}"
+ban_perm: "&4Has sido suspendido permanentemente por {reason}"
+ban_years: "&e&lAños"
+ban_months: "&e&lMeses"
+ban_days: "&e&lDías"
+ban_hours: "&e&lHoras"
+ban_minutes: "&e&lMinutos"
+ban_hacking: "&7&lUso de hacks!"
+ban_griefing: "&6&lMolestar!"
+ban_spamming: "&d&lHacer Spam!"
+ban_advertising: "&3&lHacer publicidad!"
+ban_swearing: "&e&lInsultar!"
+ban_silence_disabled: "&c&lSilencio"
+ban_silence_enabled: "&a&lSilencio"
+ban_back: "&c&lVolver"
+#----------------------------------------------------------
+#                     Potions GUI
+#----------------------------------------------------------
+potions_night_vision: "&8&lVisión nocturna"
+potions_invisibility: "&7&lInvisibilidad"
+potions_jump_boost: "&a&lSaltar más alto"
+potions_fire_resistance: "&c&lResistencia al fuego"
+potions_speed: "&b&lVelocidad"
+potions_slowness: "&4&lLentitud"
+potions_water_breathing: "&9&lRespirar bajo el agua"
+potions_instant_health: "&a&lVida instantánea"
+potions_instant_damage: "&4&lDaño instantáneo"
+potions_poison: "&5&lVeneno"
+potions_regeneration: "&e&lRegeneración"
+potions_strength: "&e&lFuerza"
+potions_weakness: "&4&lDebilidad"
+potions_luck: "&6&lSuerte"
+potions_slow_falling: "&3&lCaer más lento"
+potions_time: "&a&lTiempo"
+potions_remove_all: "&4&lBorrar todo"
+potions_level: "&a&lNivel"
+potions_back: "&c&lVolver"
+#----------------------------------------------------------
+#                     Spawner GUI
+#----------------------------------------------------------
+spawner_bat: "&a&lMurciélago"
+spawner_bee: "&6&lAbeja"
+spawner_blaze: "&c&lBlaze"
+spawner_cat: "&a&lGato"
+spawner_cave_spider: "&c&lAraña de las Cavernas"
+spawner_chicken: "&a&lPollo"
+spawner_cod: "&b&lBacalao"
+spawner_cow: "&a&lVaca"
+spawner_creeper: "&c&lCreeper"
+spawner_dolphin: "&b&lDelfín"
+spawner_donkey: "&a&lBurro"
+spawner_drowned: "&c&lDrowned"
+spawner_elder_guardian: "&c&lGuardián Anciano"
+spawner_enderman: "&c&lEnderman"
+spawner_endermite: "&c&lEndermite"
+spawner_evoker: "&c&lEvocador"
+spawner_fox: "&a&lZorro"
+spawner_ghast: "&c&lGhast"
+spawner_guardian: "&c&lGuardián"
+spawner_horse: "&a&lCaballo"
+spawner_husk: "&c&lHusk"
+spawner_llama: "&a&lLlama"
+spawner_magma_cube: "&c&lCubo de Magma"
+spawner_mooshroom: "&a&lVaca Champiñón"
+spawner_mule: "&a&lMula"
+spawner_ocelot: "&a&lOcelote"
+spawner_panda: "&a&lPanda"
+spawner_parrot: "&a&lLoro"
+spawner_phantom: "&c&lPhantom"
+spawner_pig: "&a&lCerdo"
+spawner_pillager: "&c&lAsaltante"
+spawner_polar_bear: "&a&lOso Polar"
+spawner_pufferfish: "&b&lPez Globo"
+spawner_rabbit: "&a&lConejo"
+spawner_ravager: "&c&lDevastador"
+spawner_salmon: "&b&lSalmón"
+spawner_sheep: "&a&lOveja"
+spawner_shulker: "&c&lShulker"
+spawner_silverfish: "&c&lLepisma"
+spawner_skeleton: "&c&lEsqueleto"
+spawner_skeleton_horse: "&c&lCaballo Esqueleto"
+spawner_slime: "&c&lSlime"
+spawner_spider: "&c&lAraña"
+spawner_squid: "&b&lCalamar"
+spawner_stray: "&c&lDesviado"
+spawner_trader_llama: "&a&lLlama del Comerciante Ambulante"
+spawner_tropical_fish: "&b&lPez Tropical"
+spawner_turtle: "&a&lTortuga"
+spawner_vex: "&c&lVex"
+spawner_villager: "&a&lAldeano"
+spawner_vindicator: "&c&lVindicador"
+spawner_wandering_trader: "&a&lComerciante Ambulante Errante"
+spawner_witch: "&c&lBruja"
+spawner_wither: "&c&lWither"
+spawner_wolf: "&a&lLobo"
+spawner_zombie: "&c&lZombi"
+spawner_zombie_pigman: "&c&lZombi Pigman"
+spawner_zombie_villager: "&c&lAldeano Zombi"
+spawner_back: "&c&lVolver"
+#----------------------------------------------------------
+#                      Money GUI
+#----------------------------------------------------------
+money_give: "&2&lDar"
+money_set: "&9&lFijar"
+money_take: "&c&lQuitar"
+money_back: "&c&lVolver"
+#----------------------------------------------------------
+#                      Money Amount GUI
+#----------------------------------------------------------
+money_amount_back: "&c&lVolver"
+#----------------------------------------------------------
+#                    Inventory GUI
+#----------------------------------------------------------
+inventory_refresh: "&a&lRefrescar"
+inventory_clear: "&b&lLimpiar"
+inventory_back: "&c&lVolver"
+#----------------------------------------------------------
+#                       Messages
+#----------------------------------------------------------
+message_target_player_teleport: "&aHas sido teletransportado a {player}"
+message_player_kill: "&aHas matado a {player}"
+message_player_burn: "&aHas prendido fuego a {player} &c¡Quémate!"
+message_target_player_creeper: "&a¡Un creeper, corre!"
+message_player_creeper: "&aApareció un creeper junto a {player}"
+message_target_player_heal: "&e{player} te ha curado."
+message_player_heal: "&aHas curado a {player}"
+message_target_player_feed: "&e{player} te ha alimentado."
+message_player_feed: "&aHas alimentado a {player}"
+message_player_kick: "&a{player} ha sido expulsado por {reason}"
+message_player_ban: "&a{player} ha sido baneado por {reason}"
+message_player_mute: "&a{player} ha sido silenciado por {reason}"
+message_player_god_enabled: "&a{player} ha activado el modo dios."
+message_player_god_disabled: "&a{player} ha desactivado el modo dios."
+message_target_player_god_enabled: "&a{player} te ha otorgado el modo dios."
+message_target_player_god_disabled: "&a{player} te ha quitado el modo dios."
+message_target_player_potions: "&a{player} te ha dado {potion} durante {time} minutos."
+message_player_potions: "&aLe has dado a {player} {potion} durante {time} minutos."
+message_target_player_potions_remove: "&a{player} te ha quitado todas tus pociones."
+message_player_potions_remove: "&aHas eliminado todas las pociones de {player}."
+message_heal: "&aHas sido curado."
+message_feed: "&aHas sido alimentado."
+message_god_enabled: "&aHas activado el modo dios."
+message_god_disabled: "&aHas desactivado el modo dios."
+message_kill: "&cTe has suicidado."
+message_burn: "&cTe has prendido fuego."
+message_potions_remove: "&aTe has quitado todas tus pociones."
+message_potions: "&aTe has dado {potion} durante {time} minutos."
+message_maintenance: "&aEl servidor está en &cmodo de mantenimiento&a. Por favor, espera unos minutos."
+message_maintenance_enabled: "&aEl modo de mantenimiento está &a&lactivo."
+message_maintenance_disabled: "&aEl modo de mantenimiento está &c&ldesactivado."
+message_player_not_found: "&c¡El jugador no está disponible en este momento!"
+message_ban_bypass: "&c¡No puedes banear a este jugador!"
+message_kick_bypass: "&c¡No puedes expulsar a este jugador!"
+message_give: "&aHas enviado {amount} y ahora tienes {balance}"
+message_player_give: "&aHas dado {amount} a {player} y ahora tiene {balance}"
+message_target_player_give: "&a{player} te ha enviado {amount} y ahora tienes {balance}"
+message_set: "&aHas fijado {amount}"
+message_player_set: "&aHas fijado el dinero de {player} a {amount}"
+message_target_player_set: "&a{player} te ha fijado el dinero a {amount}"
+message_take: "&aHas tomado {amount} de ti mismo y ahora tienes {balance}"
+message_player_take: "&aHas quitado {amount} a {player} y ahora tiene {balance}"
+message_target_player_take: "&c{player} te ha quitado {amount} y ahora tienes {balance}"
+message_transaction_error: "&c¡Algo salió mal en la transacción!"
+message_take_error: "&c¡No puedes gastar más dinero del que tienes!"
+message_player_take_error: "&cNo puedes quitarle más dinero al jugador {player} de lo que tiene."
+message_visible: "&aAhora eres &a&lvisible&a para todos."
+message_player_visible: "&a{player} es ahora &a&lvisible&a para todos."
+message_hide: "&aAhora eres &c&linvisible&a para todos."
+message_player_hide: "&a{player} es ahora &c&linvisible&a para todos."
+message_unban_player: "&a{player} ya no está baneado."
+message_unmute_player: "&a{player} ya no está silenciado."
+message_initializing_start: "&aEl plugin se está inicializando..."
+message_initializing_finish: "&aLa GUI está lista para usar."
+message_already_initializing: "&cLa GUI ya se está iniciando..."
+message_reload_start: "&aEl plugin se está recargando..."
+message_reload_finish: "&a¡El plugin se ha recargado con éxito!"
+message_enabled: "&a{name} ha sido habilitado"
+message_disabled: "&c{name} ha sido deshabilitado"
+message_admin_chat_enabled: "&aEl chat de administrador ha sido habilitado"
+message_admin_chat_disabled: "&cEl chat de administrador ha sido deshabilitado"
+message_admin_chat_mute: "&aEl chat ha sido silenciado."
+message_admin_chat_unmute: "&aEl chat ha sido reactivado."
+message_admin_chat_muted: "&cNo puedes hablar mientras el chat está silenciado."
+message_admin_chat_clear: "&aEl chat ha sido limpiado por {player}"
+message_admin_chat_server_disabled: "&cEl chat de administrador está deshabilitado en este servidor."
+message_freeze_enabled: "&a{player} te ha congelado."
+message_freeze_disabled: "&a{player} te ha descongelado."
+message_admin_rank: "&a{player} ahora tiene el rango de {rank}."
+message_permission_added: "&aSe ha agregado el permiso {permission} a {player}."
+message_permission_removed: "&aSe ha eliminado el permiso {permission} de {player}."

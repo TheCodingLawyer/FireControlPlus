@@ -1,0 +1,58 @@
+name: Java CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: '0 0 * * 0' # weekly
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Java ${{ matrix.java }} - ${{ matrix.storageType }}
+    strategy:
+      matrix:
+        include:
+          - storageType: mariadb
+            java: 21
+          # - storageType: h2 # disabled for now due to memory issues
+          #   java: 21
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            .gradle/loom-cache
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/libs.versions.*', '**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-${{ matrix.java }}-
+
+      - name: Execute Gradle build
+        env:
+          STORAGE_TYPE: ${{ matrix.storageType }}
+        run: ./gradlew build --info
+
+      - name: Publish to Maven Central
+        # only publish once
+        if: github.ref == 'refs/heads/master' && matrix.java == '21' && matrix.storageType == 'mariadb'
+        env:
+          ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPEUSERNAME }}
+          ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPEPASSWORD }}
+          ORG_GRADLE_PROJECT_signingKey : ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY }}
+          ORG_GRADLE_PROJECT_signingPassword : ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD }}
+        run: |
+          ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository

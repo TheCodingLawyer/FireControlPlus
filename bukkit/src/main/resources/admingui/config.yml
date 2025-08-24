@@ -1,0 +1,46 @@
+# AdminGUI Configuration
+# This is the main configuration file for AdminGUI integration
+
+# Default language for AdminGUI
+default_language: English
+
+# GUI type (1 = standard, 2 = advanced)
+gui_type: 1
+
+# Initialize GUI on player join
+initialize_gui: true
+
+# Delay before initializing GUI (in seconds)
+initialize_delay: 2
+
+# Default GUI color
+gui_default_color: LIGHT_BLUE_STAINED_GLASS_PANE
+
+# Date format for displaying dates
+date_format: "yyyy-MM-dd HH:mm:ss"
+
+# Show IP addresses in GUI
+show_ips: true
+
+# Use BanManager's database instead of separate database
+use_banmanager_database: true
+
+# MySQL settings (only used if use_banmanager_database is false)
+mysql: false
+mysql_host: localhost
+mysql_port: 3306
+mysql_database: admingui
+mysql_username: root
+mysql_password: ""
+
+# Update checker
+uc_enabled: true
+
+# Admin Tools
+admin_tools_enabled: true
+admin_tools_name: "&c&lAdmin Tools"
+admin_tools_material: NETHER_STAR
+
+# Admin Chat
+admin_chat_enabled: true
+admin_chat_prefix: "&c[AdminChat]&f"

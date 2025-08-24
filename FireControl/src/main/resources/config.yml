@@ -1,0 +1,18 @@
+# FireControl Configuration
+# Simple and lightweight fire spread control
+
+# Fire spread control settings
+fire-spread:
+  # Whether fire spread is disabled (true = no fire spread, false = normal fire spread)
+  disabled: true
+  
+  # Whether to show messages when fire spread is blocked
+  show-messages: true
+  
+  # Message shown when fire spread is blocked (set to empty string to disable)
+  block-message: "&cFire spread is disabled on this server"
+
+# Logging settings
+logging:
+  # Whether to log fire spread blocks to console
+  log-blocks: false 

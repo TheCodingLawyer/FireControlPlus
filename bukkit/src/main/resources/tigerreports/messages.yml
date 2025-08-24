@@ -1,0 +1,26 @@
+﻿# TigerReports Messages for BanManager Integration
+
+Messages:
+  # Basic messages
+  InvalidSyntaxReport: "&cUsage: /report <player> [reason]"
+  PermissionCommand: "&cYou don't have permission to use this command."
+  Cooldown: "&cYou must wait _Time_ before reporting again."
+  ReportSent: "&aYour report has been sent successfully!"
+  ReportNotify: "&6[Report] &e_Reporter_ &7reported &e_Reported_ &7for: &f_Reason_"
+  PlayerNotFound: "&cPlayer not found."
+  ReportNotFound: "&cReport not found."
+  
+  # Menu titles
+  ReportsTitle: "Reports"
+  ReportTitle: "Report #_Id_"
+  ArchivedReportsTitle: "Archived Reports"
+  
+  # Menu actions
+  ArchivedReportsDetails: "&7Click to view archived reports"
+  ReportShowAction: "&aClick to view report details"
+  ReportDeleteAction: "&cShift+Click to delete report"
+  
+  # Status messages
+  ReportProcessed: "&aReport has been processed successfully."
+  ReportArchived: "&aReport has been archived."
+  ReportDeleted: "&aReport has been deleted."

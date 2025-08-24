@@ -1,0 +1,5 @@
+# AdminGUI Players
+# Player-specific settings and data
+
+# Player language preferences will be stored here
+languages: {}

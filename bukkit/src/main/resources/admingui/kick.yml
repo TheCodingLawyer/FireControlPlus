@@ -1,0 +1,31 @@
+# AdminGUI Kick Configuration
+# Settings for kick functionality
+
+# Default kick reasons
+default_reasons:
+  - "Inappropriate behavior"
+  - "Spamming"
+  - "Rule violation"
+  - "Griefing"
+
+# Kick settings
+broadcast_kick: true
+log_kicks: true
+
+# Kick reason button slots (consistent with ban/mute/warn GUIs - bottom row)
+slots:
+  30:
+    material: "WHITE_TERRACOTTA"
+    name: "&cInappropriate Behavior"
+  31:
+    material: "ORANGE_TERRACOTTA"
+    name: "&cSpamming"
+  32:
+    material: "MAGENTA_TERRACOTTA"
+    name: "&cRule Violation"
+  33:
+    material: "LIGHT_BLUE_TERRACOTTA"
+    name: "&cGriefing"
+  34:
+    material: "YELLOW_TERRACOTTA"
+    name: "&cDisruptive Behavior"

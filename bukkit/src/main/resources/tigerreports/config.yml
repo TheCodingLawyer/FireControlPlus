@@ -1,0 +1,148 @@
+﻿# TigerReports Configuration for BanManager Integration
+# This is a simplified version of the original TigerReports config
+# adapted for BanManager integration
+
+TigerReports:
+  Version: 1.0+ banmanager
+  Author: MrTigreroux (Adapted for BanManager)
+  Description: Report management integrated with BanManager
+
+Config:
+  ColorCharacter: '&'
+  LineBreakSymbol: "//"
+  InfoLanguage: English
+  Time: default
+  
+  # Debug logging settings
+  Debug:
+    Enabled: false
+    LogReportQueries: false
+    LogMenuOperations: false
+  
+  PermissionRequired: no
+  ReportOnline: no
+  MaxReports: 100
+  MinCharacters: 3
+  ReportCooldown: 300
+  ReportedImmunity: 120
+  
+  AutoCommands: none
+  AutoCommandsBeforeTeleportation: none
+  
+  AbusiveReport:
+    Cooldown: 3600
+    Commands: none
+  
+  MessagesHistory: 5
+  CommandsHistory: none
+  
+  StackReports: yes
+  NotifyStackedReports: yes
+  UpdateDateOfStackedReports: no
+  
+  Notifications:
+    Delay: 2
+    Players:
+      Enabled: true
+      HoverableReport: true
+    Staff:
+      Connection: yes
+      MinutesInterval: 0
+  
+  OnlyDoneArchives: no
+  CloseMenuAfterReportProcessing: no
+  MenuUpdatesInterval: 10
+  
+  MenuSound: ENTITY_ITEM_PICKUP
+  ErrorSound: ENTITY_ITEM_BREAK
+  ReportSound: ENTITY_BAT_DEATH
+  TeleportSound: ENTITY_ENDERMEN_TELEPORT
+  StaffSound: ENTITY_ITEM_PICKUP
+  
+  CustomReasons: yes
+  CollectSkulls: yes
+  DisplayNameForStaff: yes
+  DisplayNameForPlayers: no
+  
+  PlayerConnectionProcessingDelay: 2000
+  
+  DefaultReasons:
+    Reason1:
+      Name: "Cheating"
+      Lore: "&7Player is using cheats/hacks."
+      Item: Material-Diamond_sword
+      PunishCommands:
+      - "ban _Reported_ 7d Cheating"
+    Reason2:
+      Name: "Griefing"
+      Lore: "&7Player has griefed builds."
+      Item: Material-TNT
+      PunishCommands:
+      - "ban _Reported_ 3d Griefing"
+    Reason3:
+      Name: "Inappropriate Chat"
+      Lore: "&7Player is being inappropriate in chat."
+      Item: Material-Sign
+      PunishCommands:
+      - "mute _Reported_ 2h Inappropriate Chat"
+  
+  Punishments:
+    Enabled: yes
+    PunishmentsCommand: none
+    DefaultReasons: yes
+    
+    Punishment1:
+      Name: "Severe Cheating"
+      Lore: "&7Permanent ban for severe cheating."
+      Item: Material-Barrier
+      PunishCommands:
+      - "ban _Reported_ Severe Cheating"
+    Punishment2:
+      Name: "Harassment"
+      Lore: "&7Player is harassing others."
+      Item: Material-Red_wool
+      PunishCommands:
+      - "ban _Reported_ 7d Harassment"
+  
+  ChatReport:
+    Enabled: no
+    Message: "_ReportButton_ _DisplayName_&7: _Message_"
+    ReportButton:
+      Text: "&7[&c&l!&7]"
+      Hover: "&6Left click &7to report the message of &e_Player_&7."
+      Reason: "Inappropriate message"
+  
+  CheckNewVersion: no
+
+# BanManager Integration Settings
+BanManagerIntegration:
+  UseBanManagerDatabase: true
+  # When true, reports will be stored in BanManager's database
+  # and will appear in the WebUI immediately
+  
+  # Map TigerReports statuses to BanManager report states
+  StatusMapping:
+    WAITING: "Open"
+    IN_PROGRESS: "In Progress"
+    DONE: "Closed"
+    ABUSIVE: "Invalid"
+
+BungeeCord:
+  Enabled: no
+  Servers:
+    server1: "Server 1"
+
+MySQL:
+  # MySQL settings are ignored when using BanManager integration
+  # BanManager's database connection is used instead
+  Host: ""
+  Port: 0
+  Database: ""
+  Username: ""
+  Password: ""
+  UseSSL: no
+  VerifyServerCertificate: no
+
+VaultChat:
+  Enabled: yes
+  Format: "_Prefix__Name__Suffix_"

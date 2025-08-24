@@ -1,0 +1,239 @@
+#       ----------- + AdminGUI by Ziga Zajc + -----------   #
+#                                                           #
+#                         Permissions                       #
+#                                                           #
+#       --------- + ------------------------- + ---------   #
+#
+#       You can use chat colors:
+#                ________________________
+#               |   code: | color:       |
+#               |________________________|
+#               |     &0  |	Black	     |
+#               |     &1  |	Dark Blue	 |
+#               |     &2  |	Dark Green	 |
+#               |     &3  |	Dark Aqua	 |
+#               |     &4  |	Dark Red	 |
+#               |     &5  |	Dark Purple	 |
+#               |     &6  |	Gold	     |
+#               |     &7  |	Gray	     |
+#               |     &8  |	Dark Gray	 |
+#               |     &9  |	Blue	     |
+#               |     &a  |	Green	     |
+#               |     &b  |	Aqua	     |
+#               |     &c  |	Red	         |
+#               |     &d  |	Light Purple |
+#               |     &e  |	Yellow	     |
+#               |     &f  |	White	     |
+#               |     &k  |	Obfuscated	 |
+#               |     &l  |	Bold	     |
+#               |     &m  |	Strikethrough|
+#               |     &n  |	Underline	 |
+#               |     &o  |	Italic	     |
+#               |     &r  |	Reset	     |
+#               |________________________|
+#
+#----------------------------------------------------------
+#                      Permissions
+#----------------------------------------------------------
+groups:
+  default:
+    prefix: "&7[&aMember&7]"
+    suffix: ""
+    priority: 1000
+    permissions:
+      - essentials.home
+      - essentials.home.bed
+      - essentials.sethome
+      - essentials.delhome
+      - essentials.tpa
+      - essentials.tpahere
+      - essentials.tpaccept
+      - essentials.tpdeny
+      - essentials.msg
+      - essentials.time
+      - essentials.warp
+      - essentials.warp.list
+      - essentials.warps.*
+  member+:
+    prefix: "&7[&aMember+&7]"
+    suffix: ""
+    priority: 900
+    inheritance:
+      - default
+    permissions:
+      - essentials.ptime
+      - essentials.pweather
+      - essentials.workbench
+      - admingui.chat.color
+  vip:
+    prefix: "&7[&6VIP&7]"
+    suffix: ""
+    priority: 800
+    inheritance:
+      - default
+      - member+
+    permissions:
+      - essentials.fly
+  vip+:
+    prefix: "&7[&6VIP+&7]"
+    suffix: ""
+    priority: 700
+    inheritance:
+      - default
+      - member+
+      - vip
+    permissions:
+      - essentials.back
+      - essentials.back.ondeath
+      - essentials.enderchest
+  youtuber:
+    prefix: "&7[&cYou&ftuber&7]"
+    suffix: ""
+    priority: 600
+    inheritance:
+      - default
+      - member+
+    permissions:
+      - essentials.fly
+  helper:
+    prefix: "&7[&9Helper&7]"
+    suffix: ""
+    priority: 500
+    inheritance:
+      - default
+      - member+
+    permissions:
+      - essentials.fly
+  builder:
+    prefix: "&7[&9Builder&7]"
+    suffix: ""
+    priority: 400
+    inheritance:
+      - default
+      - member+
+      - helper
+    permissions:
+      - essentials.gamemode
+      - essentials.gamemode.all
+  moderator:
+    prefix: "&7[&9Mod&7]"
+    suffix: ""
+    priority: 300
+    inheritance:
+      - default
+      - member+
+      - helper
+      - builder
+    permissions:
+      - essentials.weather
+      - essentials.time.set
+      - admingui.admin
+      - admingui.heal
+      - admingui.feed
+      - admingui.gamemode
+      - admingui.gamemode.survival
+      - admingui.gamemode.creative
+      - admingui.gamemode.adventure
+      - admingui.gamemode.spectator
+      - admingui.potions
+      - admingui.spawner
+      - admingui.kill
+      - admingui.burn
+      - admingui.time
+      - admingui.weather
+      - admingui.mute
+      - admingui.unmute
+      - admingui.teleport
+      - admingui.inventory
+      - admingui.enderchest
+      - admingui.vanish
+      - admingui.firework
+      - admingui.lightning
+      - admingui.chat.spy
+      - admingui.chat.color.change
+      - admingui.chat.clear
+      - admingui.chat.delay.bypass
+      - adminbans.warn
+      - adminbans.kick
+      - adminbans.banlist
+      - adminbans.mutelist
+  admin:
+    prefix: "&7[&cAdmin&7]"
+    suffix: ""
+    priority: 200
+    inheritance:
+      - default
+      - member+
+      - helper
+      - builder
+      - moderator
+    permissions:
+      - essentials.*
+      - admingui.god
+      - admingui.info
+      - admingui.spawner.other
+      - admingui.kick.other
+      - admingui.kick.bypass
+      - admingui.ban
+      - admingui.ban.bypass
+      - admingui.unban
+      - admingui.heal.other
+      - admingui.feed.other
+      - admingui.gamemode.other
+      - admingui.gamemode.other.survival
+      - admingui.gamemode.other.creative
+      - admingui.gamemode.other.adventure
+      - admingui.gamemode.other.spectator
+      - admingui.god.other
+      - admingui.potions.other
+      - admingui.kill.other
+      - admingui.burn.other
+      - admingui.teleport.other
+      - admingui.money
+      - admingui.money.other
+      - admingui.inventory.edit
+      - admingui.enderchest.edit
+      - admingui.vanish.other
+      - admingui.firework.other
+      - admingui.lightning.other
+      - admingui.fakeop
+      - admingui.custom
+      - admingui.freeze.other
+      - admingui.freeze.bypass
+      - admingui.maintenance
+      - admingui.maintenance.manage
+      - admingui.reload
+      - admingui.check
+      - admingui.chat.staff
+      - admingui.chat.filter.bypass
+      - admingui.chat.advertisement.bypass
+      - admingui.chat.mute
+      - admingui.chat.mute.bypass
+      - admingui.chat.color.change.other
+      - adminbans.ban
+      - adminbans.ban.exempt
+      - adminbans.banip
+      - adminbans.unbanip
+      - adminbans.mute
+      - adminbans.mute.exempt
+      - adminbans.warn.exempt
+      - adminbans.kick.exempt
+      - adminbans.reload
+  owner:
+    prefix: "&7[&bOwner&7]"
+    suffix: ""
+    priority: 100
+    inheritance:
+      - default
+      - member+
+      - helper
+      - builder
+      - moderator
+      - admin
+    permissions:
+      - '*'
+      - admingui.rank
+      - admingui.rank.set
+      - admingui.rank.up
+      - admingui.rank.down
+      - admingui.permission.manage

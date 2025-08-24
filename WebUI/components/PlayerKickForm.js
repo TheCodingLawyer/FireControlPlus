@@ -1,0 +1,50 @@
+import { useEffect } from 'react'
+import { useForm, Controller } from 'react-hook-form'
+import Input from './Input'
+import Button from './Button'
+import ErrorMessages from './ErrorMessages'
+import { useMutateApi } from '../utils'
+import ServerSelector from './admin/ServerSelector'
+import { FaPencilAlt } from 'react-icons/fa'
+
+export default function PlayerKickForm ({ serverFilter, onFinished, query, parseVariables, disableServers = false, defaults = {}, submitRef = null }) {
+  const { handleSubmit, formState, register, control } = useForm({ defaultValues: { ...defaults, server: defaults?.server } })
+  const { isSubmitting } = formState
+  const { load, data, errors } = useMutateApi({ query })
+
+  useEffect(() => {
+    if (!data) return
+    if (Object.keys(data).some(key => !!data[key])) onFinished(data)
+  }, [data])
+
+  const onSubmit = (data) => load(parseVariables(data))
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <ErrorMessages errors={errors} />
+      <Controller
+        name='server'
+        control={control}
+        defaultValue={false}
+        rules={{ required: true }}
+        render={({ field }) => (
+          <ServerSelector
+            className='mb-6'
+            {...field}
+            isDisabled={disableServers}
+            filter={serverFilter}
+          />
+        )}
+      />
+      <Input
+        required
+        label='Reason'
+        icon={<FaPencilAlt />}
+        {...register('reason')}
+      />
+      <Button ref={submitRef} disabled={isSubmitting} loading={isSubmitting} className={submitRef ? 'hidden' : ''}>
+        Save
+      </Button>
+    </form>
+  )
+} 
