@@ -2,7 +2,11 @@
 nixPkgs = ["nodejs_20"]
 
 [phases.install]
-cmds = ["cd WebUI && npm install --legacy-peer-deps"]
+cmds = [
+  "cd WebUI && npm install --legacy-peer-deps",
+  "mkdir -p WebUI/server/data/reports",
+  "test -f WebUI/server/data/reports/provider.js || echo 'File missing!' && ls -la WebUI/server/data/reports/"
+]
 
 [phases.build]
 cmds = ["cd WebUI && npm run build"]
