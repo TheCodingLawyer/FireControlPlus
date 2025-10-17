@@ -1,0 +1,9 @@
+[build]
+builder = "NIXPACKS"
+buildCommand = "cd WebUI && npm install --legacy-peer-deps && npm run build"
+
+[deploy]
+startCommand = "cd WebUI && npm start"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+
