@@ -12,5 +12,5 @@ cmds = [
 cmds = ["cd WebUI && npm run build"]
 
 [start]
-cmd = "cd WebUI && node init-db.js && npm start"
+cmd = "cd WebUI && npm start"
 

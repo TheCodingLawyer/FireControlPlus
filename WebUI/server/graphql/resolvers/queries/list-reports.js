@@ -1,7 +1,7 @@
 const { getSql } = require('../../utils')
 const { parseResolveInfo, simplifyParsedResolveInfoFragmentWithType } = require('graphql-parse-resolve-info')
 
-module.exports = async function listReports (obj, { player, assigned, actor, stateId, serverId, limit, offset, order }, { state }, info) {
+module.exports = async function listPlayerReports (obj, { player, assigned, actor, stateId, serverId, limit, offset, order }, { state }, info) {
   const server = state.serversPool.get(serverId)
   const data = {}
 
