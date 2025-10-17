@@ -1,5 +1,17 @@
 const ExposedError = require('../../../data/exposed-error')
-const { getReportsProvider } = require('../../../data/reports/provider')
+
+// Inline provider to avoid module loading issues
+async function getReportsProvider ({ pool, config }) {
+  try {
+    const result = await pool.raw('SHOW TABLES LIKE \'tigerreports_reports\'')
+    if (result && result[0] && result[0].length > 0) {
+      return 'tigerreports'
+    }
+  } catch (error) {
+    // Table doesn't exist, fall back to default
+  }
+  return 'banmanager'
+}
 
 module.exports = async function statistics (obj, args, { state }) {
   const data = {
