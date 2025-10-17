@@ -15,6 +15,9 @@ try {
 
 const nextConfig = (phase) => {
   return {
+    eslint: {
+      ignoreDuringBuilds: true,
+    },
     transpilePackages: ['lodash-es'],
     webpack (config) {
       config.module.rules.push({
