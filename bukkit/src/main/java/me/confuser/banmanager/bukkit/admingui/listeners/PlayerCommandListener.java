@@ -32,9 +32,10 @@ public class PlayerCommandListener implements Listener {
 		// Ensure AdminGUI commands work even if another plugin also registers them
 		String lower = message.toLowerCase();
 		if (lower.startsWith("/admin ") || lower.equals("/admin")) {
-			String suffix = message.length() > 6 ? message.substring(6) : "";
-			p.performCommand("banmanager:admin" + suffix);
+			// Directly execute our admin command instead of redirecting
 			event.setCancelled(true);
+			String[] args = message.length() > 7 ? message.substring(7).split(" ") : new String[0];
+			new me.confuser.banmanager.bukkit.admingui.commands.Admin().onCommand(p, null, "admin", args);
 			return;
 		}
 		if (lower.startsWith("/adminchat ") || lower.equals("/adminchat")) {

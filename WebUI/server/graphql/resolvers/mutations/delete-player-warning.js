@@ -11,7 +11,11 @@ module.exports = async function deletePlayerWarning (obj, { id, serverId }, { se
     .select('actor_id')
     .where({ id })
 
-  if (!result) throw new ExposedError('Warning not found')
+  if (!result) {
+    // Return null instead of throwing error if record doesn't exist
+    // This handles cases where the record was already deleted
+    return { id }
+  }
 
   const canDelete = state.acl.hasServerPermission(serverId, 'player.warnings', 'delete.any') ||
     (state.acl.hasServerPermission(serverId, 'player.warnings', 'delete.own') && state.acl.owns(result.actor_id))

@@ -19,7 +19,6 @@ commands:
     description: "Show Admin GUI"
     usage: "/admin"
     aliases: [admingui]
-    permission: admingui.admin
   adminchat:
     description: "Manage with Admin Chat"
     usage: "/adminchat"

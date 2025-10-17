@@ -337,7 +337,8 @@ public class Admin implements CommandExecutor {
 
 		Player player = (Player) sender;
 
-		if (TargetPlayer.hasPermission(player, "admingui.admin")) {
+		
+		if (player.isOp() || TargetPlayer.hasPermission(player, "admingui.admin")) {
 
 			//TODO: Bungee
 			Channel.send(player.getName(), "send", "online_players");

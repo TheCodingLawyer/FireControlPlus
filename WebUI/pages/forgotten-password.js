@@ -16,10 +16,15 @@ function Page () {
   }
 
   return (
-    <DefaultLayout title='Forgotten Password' loading={user}>
+    <DefaultLayout title='Login with PIN' loading={user}>
       <PageContainer>
         <Panel className='mx-auto w-full max-w-md'>
-          <PageHeader title='Forgotten Password' subTitle='Help' />
+          <PageHeader title='Login with In-Game PIN' subTitle='From Minecraft Server' />
+          <div className='mb-6 p-4 bg-blue-500/20 border border-blue-500/30 rounded-lg'>
+            <p className='text-blue-200 text-sm'>
+              <strong>How to get your PIN:</strong> Join the Minecraft server and use the <code className='bg-primary-900 px-1 rounded'>/bmpin</code> command, or check your ban screen if you're banned.
+            </p>
+          </div>
           <PlayerLoginPinForm onSuccess={onSuccess} showHint />
         </Panel>
       </PageContainer>

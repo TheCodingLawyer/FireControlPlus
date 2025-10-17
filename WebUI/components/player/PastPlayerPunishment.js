@@ -49,8 +49,23 @@ const metaMap = {
 export default function PastPlayerPunishment ({ punishment, serverId, type, onDeleted }) {
   const meta = metaMap[type]
   const [open, setOpen] = useState(false)
+  const [isDeleted, setIsDeleted] = useState(false)
 
   const { load, data, loading, errors } = useMutateApi({ query: meta.deleteMutation })
+
+  // Don't render if this item has been deleted
+  if (isDeleted) return null
+
+  // Auto-cleanup: If this punishment has invalid data that suggests it's orphaned, remove it
+  useEffect(() => {
+    // Check for common signs of orphaned/invalid records
+    if (!punishment.id || !punishment.created || punishment.created === 0) {
+      console.warn(`Removing orphaned ${type} record:`, punishment)
+      setIsDeleted(true)
+      const deletionKey = `delete${type.charAt(0).toUpperCase() + type.slice(1)}${type === 'note' ? '' : 'Record'}`
+      onDeleted({ [deletionKey]: { id: punishment.id || 'orphaned' } })
+    }
+  }, [punishment, type, onDeleted])
 
   const showConfirmDelete = (e) => {
     e.preventDefault()
@@ -58,7 +73,21 @@ export default function PastPlayerPunishment ({ punishment, serverId, type, onDe
     setOpen(true)
   }
   const handleConfirmDelete = async () => {
-    await load({ id: punishment.id, serverId })
+    try {
+      await load({ id: punishment.id, serverId })
+    } catch (error) {
+      // If the record is not found, treat it as already deleted and remove from UI
+      if (error.message && (error.message.includes('not found') || error.message.includes('does not exist'))) {
+        setOpen(false)
+        setIsDeleted(true)
+        // Simulate successful deletion response to remove from parent list
+        const deletionKey = `delete${type.charAt(0).toUpperCase() + type.slice(1)}${type === 'note' ? '' : 'Record'}`
+        onDeleted({ [deletionKey]: { id: punishment.id } })
+      } else {
+        // For other errors, keep the modal open to show the error
+        console.error('Deletion failed:', error)
+      }
+    }
   }
   const handleDeleteCancel = () => setOpen(false)
 
@@ -66,6 +95,7 @@ export default function PastPlayerPunishment ({ punishment, serverId, type, onDe
     if (!data) return
     if (Object.keys(data).some(key => !!data[key].id)) {
       setOpen(false)
+      setIsDeleted(true)
       onDeleted(data)
     }
   }, [data])

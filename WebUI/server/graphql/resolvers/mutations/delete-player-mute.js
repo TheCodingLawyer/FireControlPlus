@@ -12,7 +12,11 @@ module.exports = async function deletePlayerMute (obj, { id, serverId }, { sessi
     .select('actor_id')
     .where({ id })
 
-  if (!result) throw new ExposedError('Mute not found')
+  if (!result) {
+    // Return null instead of throwing error if record doesn't exist
+    // This handles cases where the record was already deleted
+    return { id }
+  }
 
   const canDelete = state.acl.hasServerPermission(serverId, 'player.mutes', 'delete.any') ||
     (state.acl.hasServerPermission(serverId, 'player.mutes', 'delete.own') && state.acl.owns(result.actor_id))

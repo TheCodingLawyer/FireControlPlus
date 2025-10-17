@@ -16,9 +16,8 @@ commands:
   bmpin:
     description: Display a valid login pin
     usage: "/bmpin"
-    permission: bm.command.bmpin
 
 permissions:
   bm.command.bmpin:
     description: Generates a login pin
-    default: op
+    default: true

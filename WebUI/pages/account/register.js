@@ -20,6 +20,32 @@ export default function Page () {
     }
   }, [user])
 
+  // Show message if user is not authenticated at all
+  if (user === null) {
+    return (
+      <DefaultLayout title='Register | Account' loading={false}>
+        <PageContainer>
+          <Panel className='mx-auto w-full max-w-md'>
+            <PageHeader title='Register' subTitle='Create an account' />
+            <div className='mb-6 p-4 bg-orange-500/20 border border-orange-500/30 rounded-lg text-center'>
+              <p className='text-orange-200 mb-3'>
+                <strong>Authentication Required</strong>
+              </p>
+              <p className='text-orange-200 text-sm mb-4'>
+                You must login with your in-game PIN first before creating an account.
+              </p>
+              <Link href='/forgotten-password' passHref>
+                <Button className='bg-primary-900 hover:bg-primary-800 font-semibold'>
+                  Login with In-Game PIN
+                </Button>
+              </Link>
+            </div>
+          </Panel>
+        </PageContainer>
+      </DefaultLayout>
+    )
+  }
+
   return (
     <DefaultLayout title='Register | Account' loading={false}>
       <PageContainer>

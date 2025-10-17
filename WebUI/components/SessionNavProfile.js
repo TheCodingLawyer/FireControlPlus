@@ -16,6 +16,12 @@ export default function SessionNavProfile ({ user, unreadNotificationCount }) {
   const [loggingOut, setLoggingOut] = useState(false)
   const { hasPermission } = useUser()
 
+  // Check if user has permission to view dashboard (reports or appeals)
+  const canViewDashboard = hasPermission('player.reports', 'view.any') || 
+                           hasPermission('player.reports', 'view.assigned') ||
+                           hasPermission('player.appeals', 'view.any') || 
+                           hasPermission('player.appeals', 'view.assigned')
+
   const handleLogout = async () => {
     setLoggingOut(true)
 
@@ -49,7 +55,7 @@ export default function SessionNavProfile ({ user, unreadNotificationCount }) {
             {router.pathname.endsWith('/notifications') ? <MdNotifications /> : <MdOutlineNotifications />}
           </Button>
         </Link>
-        <Link href='/dashboard' passHref><Button className={buttonClassName} title='Dashboard'>{router.pathname.endsWith('/dashboard') ? <MdDashboard /> : <MdOutlineDashboard />}</Button></Link>
+        {canViewDashboard && <Link href='/dashboard' passHref><Button className={buttonClassName} title='Dashboard'>{router.pathname.endsWith('/dashboard') ? <MdDashboard /> : <MdOutlineDashboard />}</Button></Link>}
         <Dropdown
           trigger={({ onClickToggle }) => (
             <Button
@@ -80,7 +86,7 @@ export default function SessionNavProfile ({ user, unreadNotificationCount }) {
         </Link>
         <span className='text-5xl mb-2 border-b border-primary-400 leading-none' />
         <Dropdown.Item name='Account' href='/account' className='px-2 mb-2 m-0' />
-        <Dropdown.Item name='Dashboard' href='/dashboard' className='px-2 mb-2' />
+        {canViewDashboard && <Dropdown.Item name='Dashboard' href='/dashboard' className='px-2 mb-2' />}
         <Dropdown.Item name='Notifications' href='/notifications' className='px-2 mb-2'>
           {unreadNotificationCount > 0 && <NotificationBadge>{unreadNotificationCount > 9 ? '9+' : unreadNotificationCount}</NotificationBadge>}
         </Dropdown.Item>

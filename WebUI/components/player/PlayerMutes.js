@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Loader from '../Loader'
 import ServerSelector from '../admin/ServerSelector'
 import { useApi } from '../../utils'
@@ -53,6 +53,52 @@ export default function PlayerMutes ({ id }) {
 
     mutate({ ...data, listPlayerPunishmentRecords: { records, total: total - 1 } }, false)
   }
+
+  // AGGRESSIVE cleanup function to remove orphaned records
+  const cleanupOrphanedRecords = () => {
+    if (!data?.listPlayerPunishmentRecords?.records) return
+    
+    const originalCount = data.listPlayerPunishmentRecords.records.length
+    
+    // More aggressive filtering - remove records with ANY suspicious data
+    const validRecords = data.listPlayerPunishmentRecords.records.filter(record => {
+      // Keep records that have ALL required valid data
+      const isValid = record.id && 
+                     record.created && 
+                     record.created > 0 && 
+                     record.reason && 
+                     record.actor &&
+                     record.actor.id
+      
+      if (!isValid) {
+        console.warn('🗑️ Removing invalid mute record:', record)
+      }
+      return isValid
+    })
+
+    if (validRecords.length !== originalCount) {
+      console.log(`🧹 AGGRESSIVE CLEANUP: Removed ${originalCount - validRecords.length} problematic mute records`)
+      mutate({ 
+        ...data, 
+        listPlayerPunishmentRecords: { 
+          records: validRecords, 
+          total: validRecords.length 
+        } 
+      }, false)
+    }
+  }
+
+  // Run aggressive cleanup IMMEDIATELY when data loads
+  useEffect(() => {
+    if (data?.listPlayerPunishmentRecords?.records) {
+      // Run cleanup after a tiny delay to ensure component is mounted
+      setTimeout(() => {
+        cleanupOrphanedRecords()
+      }, 50)
+    }
+  }, [data?.listPlayerPunishmentRecords?.records])
+
+
 
   return (
     <div>

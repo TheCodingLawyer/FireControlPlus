@@ -85,7 +85,8 @@ public class PlayerPlaceholderCommandListener implements Listener {
 			}
 		}
 
-		for (Map.Entry<String, Object> slots : AdminGuiIntegration.getInstance().getConf().getConfigurationSection("ccc").getValues(false).entrySet()) {
+		if (AdminGuiIntegration.getInstance().getConf().getConfigurationSection("ccc") != null) {
+			for (Map.Entry<String, Object> slots : AdminGuiIntegration.getInstance().getConf().getConfigurationSection("ccc").getValues(false).entrySet()) {
 
 			List<String> aliases = adminGUI.getConf().getStringList("ccc." + slots.getKey() + ".aliases");
 
@@ -131,6 +132,7 @@ public class PlayerPlaceholderCommandListener implements Listener {
 				}
 				event.setCancelled(true);
 			}
+		}
 		}
 	}
 

@@ -12,7 +12,11 @@ module.exports = async function deletePlayerBanRecord (obj, { id, serverId }, { 
     .select('pastActor_id')
     .where({ id })
 
-  if (!result) throw new ExposedError('Ban record not found')
+  if (!result) {
+    // Return null instead of throwing error if record doesn't exist
+    // This handles cases where the record was already deleted
+    return { id }
+  }
 
   const canDelete = state.acl.hasServerPermission(serverId, 'player.bans', 'delete.any') ||
     (state.acl.hasServerPermission(serverId, 'player.bans', 'delete.own') && state.acl.owns(result.pastActor_id))

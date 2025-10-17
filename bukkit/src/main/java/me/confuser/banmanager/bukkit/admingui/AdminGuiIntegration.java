@@ -200,6 +200,33 @@ public class AdminGuiIntegration implements PluginMessageListener {
                 banManagerPlugin.getCommand("admin").setExecutor(new Admin());
                 banManagerPlugin.getCommand("admin").setTabCompleter(new me.confuser.banmanager.bukkit.admingui.TabCompletion());
                 logger.info("Registered /admin command for AdminGUI");
+                
+                // Multiple delayed re-registrations to aggressively override other plugins
+                Bukkit.getScheduler().runTaskLater(banManagerPlugin, () -> {
+                    if (banManagerPlugin.getCommand("admin") != null) {
+                        banManagerPlugin.getCommand("admin").setExecutor(new Admin());
+                        banManagerPlugin.getCommand("admin").setTabCompleter(new me.confuser.banmanager.bukkit.admingui.TabCompletion());
+                        logger.info("Re-registered /admin command (1st attempt)");
+                    }
+                }, 20L); // 1 second delay
+                
+                // Second attempt after 5 seconds
+                Bukkit.getScheduler().runTaskLater(banManagerPlugin, () -> {
+                    if (banManagerPlugin.getCommand("admin") != null) {
+                        banManagerPlugin.getCommand("admin").setExecutor(new Admin());
+                        banManagerPlugin.getCommand("admin").setTabCompleter(new me.confuser.banmanager.bukkit.admingui.TabCompletion());
+                        logger.info("Re-registered /admin command (2nd attempt)");
+                    }
+                }, 100L); // 5 second delay
+                
+                // Third attempt after 10 seconds
+                Bukkit.getScheduler().runTaskLater(banManagerPlugin, () -> {
+                    if (banManagerPlugin.getCommand("admin") != null) {
+                        banManagerPlugin.getCommand("admin").setExecutor(new Admin());
+                        banManagerPlugin.getCommand("admin").setTabCompleter(new me.confuser.banmanager.bukkit.admingui.TabCompletion());
+                        logger.info("Final re-registration of /admin command");
+                    }
+                }, 200L); // 10 second delay
             } else {
                 logger.warning("Failed to register /admin command - command not found in plugin.yml");
             }

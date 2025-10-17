@@ -4,7 +4,7 @@ const { pwnedPassword } = require('hibp')
 
 // eslint-disable-next-line complexity
 module.exports = async function ({ request: { body }, throw: throwError, response, session, state }) {
-  if (!session || !session.playerId) return throwError(400, 'You are not logged in')
+  if (!session || !session.playerId) return throwError(400, 'You must login with your in-game PIN first. Go to the login page and click "Login with In-Game PIN" button.')
 
   if (typeof body.email !== 'string') return throwError(400, 'Invalid email type')
   if (!isEmail(body.email)) return throwError(400, 'Invalid email address')
