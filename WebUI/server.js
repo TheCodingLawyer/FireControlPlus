@@ -40,11 +40,8 @@ const dbConfig = {
     const serversPool = await setupServersPool({ dbPool, logger })
     const app = await createApp({ dbPool, logger, serversPool, disableUI: process.env.DISABLE_UI === 'true' })
 
-    if (process.env.HOSTNAME) {
-      app.listen(port, process.env.HOSTNAME, () => logger.info(`Listening on ${process.env.HOSTNAME}:${port}`))
-    } else {
-      app.listen(port, () => logger.info(`Listening on ${port}`))
-    }
+    // Railway requires binding to 0.0.0.0 for proxy to work
+    app.listen(port, '0.0.0.0', () => logger.info(`Listening on 0.0.0.0:${port}`))
   } catch (error) {
     logger.error(error)
     process.exit(1)
