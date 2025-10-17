@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 require('dotenv').config()
-const mysql = require('mysql2/promise')
+const mysql = require('mysql')
 
 const dbConfig = {
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  host: process.env.DB_HOST || 'mysql.railway.internal',
+  port: process.env.DB_PORT || 3306,
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'railway',
   multipleStatements: true
 }
 
@@ -78,19 +78,32 @@ CREATE TABLE IF NOT EXISTS \`bm_web_users\` (
   PRIMARY KEY (\`player_id\`),
   KEY \`bm_web_users_email_index\` (\`email\`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-`
+`;
 
-;(async () => {
-  try {
-    console.log('Initializing database schema...')
-    const connection = await mysql.createConnection(dbConfig)
-    await connection.query(initSQL)
-    await connection.end()
-    console.log('✅ Database schema initialized successfully')
-    process.exit(0)
-  } catch (error) {
-    console.error('❌ Database initialization failed:', error.message)
+console.log('🚀 Initializing BanManager WebUI database schema...')
+console.log(`📍 Connecting to: ${dbConfig.host}:${dbConfig.port}/${dbConfig.database}`)
+
+const connection = mysql.createConnection(dbConfig)
+
+connection.connect((err) => {
+  if (err) {
+    console.error('❌ Database connection failed:', err.message)
     process.exit(1)
   }
-})()
-
+  
+  console.log('✅ Connected to database')
+  
+  connection.query(initSQL, (error, results) => {
+    if (error) {
+      console.error('❌ Schema initialization failed:', error.message)
+      connection.end()
+      process.exit(1)
+    }
+    
+    console.log('✅ Database schema initialized successfully!')
+    console.log('📋 Tables ready:', results.length, 'statements executed')
+    
+    connection.end()
+    console.log('🎉 Initialization complete - starting server...')
+  })
+})
