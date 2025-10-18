@@ -74,8 +74,9 @@ CREATE TABLE IF NOT EXISTS `bm_web_role_resources` (
 
 CREATE TABLE IF NOT EXISTS `bm_web_users` (
   `player_id` binary(16) NOT NULL,
-  `email` varchar(255) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
+  `updated` int(10) unsigned NOT NULL,
   PRIMARY KEY (`player_id`),
   KEY `bm_web_users_email_index` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
