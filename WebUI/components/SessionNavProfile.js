@@ -49,7 +49,8 @@ export default function SessionNavProfile ({ user, unreadNotificationCount }) {
   return (
     <>
       <div className='hidden md:flex gap-4'>
-        {hasPermission('servers', 'manage') && <Link href='/admin' passHref><Button className={buttonClassName} title='Admin'><MdManageAccounts /></Button></Link>}
+        {/* TEMPORARILY DISABLED AUTH: Always show admin button */}
+        <Link href='/admin' passHref><Button className={buttonClassName} title='Admin'><MdManageAccounts /></Button></Link>
         <Link href='/notifications' passHref>
           <Button className={buttonClassName}>
             {router.pathname.endsWith('/notifications') ? <MdNotifications /> : <MdOutlineNotifications />}

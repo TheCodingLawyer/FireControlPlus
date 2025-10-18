@@ -14,13 +14,14 @@ module.exports = async function me (obj, info, { session, state, log }) {
   if (!session || !session.playerId) {
     // TEMPORARILY DISABLED AUTH: Return a fake session for unauthenticated users
     // so the frontend treats them as logged in with admin permissions
+    // Using a proper UUID format: 00000000-0000-0000-0000-000000000000
     return {
-      id: 'demo-user',
-      name: 'Demo User',
-      email: null,
-      hasAccount: false,
+      id: '00000000-0000-0000-0000-000000000000',
+      name: 'Demo Admin',
+      email: 'demo@admin.local',
+      hasAccount: true,
       session: {
-        type: 'guest-admin' // Fake session type
+        type: 'password' // Fake session type to appear as normal admin
       },
       resources: allResources
     }
