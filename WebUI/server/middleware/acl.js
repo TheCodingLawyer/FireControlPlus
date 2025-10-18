@@ -29,8 +29,9 @@ module.exports = async (ctx, next) => {
   }
 
   if (!valid(ctx.session)) { // Validate twice in case previous check invalidates
-    // They're a guest, load Guest role permissions
-    resourceValues = await loadRoleResourceValues(dbPool, 1)
+    // TEMPORARILY DISABLED AUTH: Load Admin role permissions for everyone
+    // Original: resourceValues = await loadRoleResourceValues(dbPool, 1) // Guest role
+    resourceValues = await loadRoleResourceValues(dbPool, 3) // Admin role
   } else {
     const playerRoleResults = await dbPool('bm_web_role_resources AS rr')
       .select('r.name AS name', 'rr.value AS value')
