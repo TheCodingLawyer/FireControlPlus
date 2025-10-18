@@ -111,12 +111,10 @@ CREATE TABLE IF NOT EXISTS `bm_web_push_subscriptions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `bm_web_rate_limits` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `type` varchar(255) NOT NULL,
-  `ip` varbinary(16) DEFAULT NULL,
-  `player_id` binary(16) DEFAULT NULL,
-  `created` bigint(20) unsigned NOT NULL,
-  PRIMARY KEY (`id`)
+  `key` varchar(255) NOT NULL,
+  `points` int(9) NOT NULL DEFAULT 0,
+  `expire` BIGINT UNSIGNED,
+  PRIMARY KEY (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `bm_web_appeals` (
