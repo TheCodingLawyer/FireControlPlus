@@ -9,7 +9,8 @@ import PageHeader from '../../components/PageHeader'
 import Dropdown from '../../components/Dropdown'
 
 export default function Page () {
-  const { user } = useUser({ redirectTo: '/login' })
+  // TEMPORARILY DISABLED AUTH: No redirect to login
+  const { user } = useUser()
 
   return (
     <DefaultLayout title='Account' loading={!user}>

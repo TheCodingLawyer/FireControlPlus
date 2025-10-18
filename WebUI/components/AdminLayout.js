@@ -21,7 +21,8 @@ const icons = {
 
 const AdminLayout = ({ children, title }) => {
   const router = useRouter()
-  const { user } = useUser({ redirectIfFound: false, redirectTo: '/login' })
+  // TEMPORARILY DISABLED AUTH: No redirect to login
+  const { user } = useUser()
   const { loading, data, errors } = useApi({
     query: `query navigation {
       adminNavigation {

@@ -6,7 +6,8 @@ import NotificationList from '../components/notifications/NotificationList'
 import PushNotificationButton from '../components/notifications/PushNotificationButton'
 
 function Page () {
-  const { user } = useUser({ redirectTo: '/login', redirectIfFound: false })
+  // TEMPORARILY DISABLED AUTH: No redirect to login
+  const { user } = useUser()
 
   return (
     <DefaultLayout title='Notifications'>
