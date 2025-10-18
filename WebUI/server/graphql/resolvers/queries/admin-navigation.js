@@ -1,7 +1,15 @@
 module.exports = async function adminNavigation (obj, info, { state }) {
   const { rolesCount } = await state.dbPool('bm_web_roles').count({ rolesCount: '*' }).first()
   const { notificationRulesCount } = await state.dbPool('bm_web_notification_rules').count({ notificationRulesCount: '*' }).first()
-  const { webHooksCount } = await state.dbPool('bm_web_webhooks').count({ webHooksCount: '*' }).first()
+  
+  // SAFETY FIX: Handle missing webhooks table gracefully
+  let webHooksCount = 0
+  try {
+    const result = await state.dbPool('bm_web_webhooks').count({ webHooksCount: '*' }).first()
+    webHooksCount = result?.webHooksCount || 0
+  } catch (e) {
+    // Table doesn't exist, default to 0
+  }
 
   const left = [
     { name: 'Roles', label: rolesCount, href: '/admin/roles' },

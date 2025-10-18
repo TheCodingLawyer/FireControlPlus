@@ -25,10 +25,10 @@ export async function getStaticProps () {
 
     if (data?.commits?.length) {
       latestVersion = data.commits[data.commits.length - 1].sha
+      // SAFETY FIX: Only filter if commits array exists
+      newFeatures = data.commits.filter(({ commit }) => commit.message.startsWith('feat:'))
+      fixes = data.commits.filter(({ commit }) => commit.message.startsWith('fix:'))
     }
-
-    newFeatures = data.commits.filter(({ commit }) => commit.message.startsWith('feat:'))
-    fixes = data.commits.filter(({ commit }) => commit.message.startsWith('fix:'))
   } catch (e) {
     console.error(e)
   }
