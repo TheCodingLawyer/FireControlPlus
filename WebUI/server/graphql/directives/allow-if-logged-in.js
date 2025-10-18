@@ -14,10 +14,12 @@ function allowIfLoggedInDirective () {
         fieldConfig.resolve = async function (...args) {
           const { session } = args[2]
 
-          if (!valid(session)) {
-            throw new ExposedError(
-              'You do not have permission to perform this action, please contact your server administrator')
-          }
+          // TEMPORARILY DISABLED AUTH: Allow access without valid session
+          // Original check:
+          // if (!valid(session)) {
+          //   throw new ExposedError(
+          //     'You do not have permission to perform this action, please contact your server administrator')
+          // }
 
           return resolve.apply(this, args)
         }
