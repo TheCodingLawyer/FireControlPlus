@@ -9,19 +9,22 @@ const Select = forwardRef(({ options, isLoading, onInputChange, onChange, value,
     </svg>
   )
 
+  // SAFETY FIX: Handle undefined/null options
+  const safeOptions = options || []
+  
   const setDefaultValue = rest.isMulti && Array.isArray(value)
-    ? options.filter((option) => value.includes((getOptionValue ? getOptionValue(option) : option.value)))
-    : options.find((option) => (getOptionValue ? getOptionValue(option) : option.value) === value)
+    ? safeOptions.filter((option) => value.includes((getOptionValue ? getOptionValue(option) : option.value)))
+    : safeOptions.find((option) => (getOptionValue ? getOptionValue(option) : option.value) === value)
 
   return (
     <ReactSelect
       instanceId={useId()}
-      options={options}
+      options={safeOptions}
       isLoading={isLoading}
       onInputChange={onInputChange}
       onChange={onChange}
       defaultValue={defaultValue || setDefaultValue}
-      value={options.find((option) => (getOptionValue ? getOptionValue(option) : option.value) === value)}
+      value={safeOptions.find((option) => (getOptionValue ? getOptionValue(option) : option.value) === value)}
       filterOption={filterOption}
       noOptionsMessage={noOptionsMessage}
       isClearable={isClearable}
