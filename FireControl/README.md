@@ -210,7 +210,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Author
 
-Developed by the BanManager Integration Team
+Developed by Kenji Studios
+
+Discord: jxnpo (JinpoTheDev)
 
 ---
 

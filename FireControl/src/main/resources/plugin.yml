@@ -2,9 +2,9 @@ name: FireControl
 version: ${version}
 main: com.firecontrol.FireControlPlugin
 api-version: 1.13
-author: BanManager Integration Team
+author: Kenji Studios (jxnpo - JinpoTheDev)
 description: ${description}
-website: https://github.com/BanManager
+website: https://github.com/TheCodingLawyer/FireControlPlus
 
 commands:
   firecontrol:
