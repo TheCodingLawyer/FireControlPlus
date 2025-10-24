@@ -1,0 +1,19 @@
+name: FireControl
+version: ${version}
+main: com.firecontrol.FireControlPlugin
+api-version: 1.13
+author: BanManager Integration Team
+description: ${description}
+website: https://github.com/BanManager
+
+commands:
+  firecontrol:
+    description: Control fire spread settings
+    usage: /firecontrol <enable|disable|status>
+    permission: firecontrol.admin
+    aliases: [fc, firespread]
+
+permissions:
+  firecontrol.admin:
+    description: Allows use of fire control commands
+    default: op 
