@@ -1,6 +1,5 @@
 plugins {
     `java-library`
-    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "com.firecontrol"
@@ -9,7 +8,7 @@ description = "Lightweight plugin to control fire spread on Spigot servers"
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(11))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
@@ -23,16 +22,8 @@ dependencies {
 }
 
 tasks {
-    shadowJar {
-        archiveClassifier.set("")
+    jar {
         archiveFileName.set("FireControl-${project.version}.jar")
-        
-        // Minimize the jar size
-        minimize()
-    }
-    
-    build {
-        dependsOn(shadowJar)
     }
     
     processResources {
