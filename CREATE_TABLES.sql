@@ -155,3 +155,18 @@ CREATE TABLE IF NOT EXISTS `bm_web_appeal_comments` (
   CONSTRAINT `bm_web_appeal_comments_appeal_id_fk` FOREIGN KEY (`appeal_id`) REFERENCES `bm_web_appeals` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- Pending Commands table for cross-server kick synchronization
+CREATE TABLE IF NOT EXISTS `bm_pending_commands` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `server_id` varchar(50) NOT NULL DEFAULT 'ALL',
+  `command` varchar(50) NOT NULL,
+  `player_id` binary(16) NOT NULL,
+  `actor_id` binary(16) NOT NULL,
+  `args` text DEFAULT NULL,
+  `processed` tinyint(1) NOT NULL DEFAULT 0,
+  `created` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_server_command` (`server_id`, `command`),
+  KEY `idx_processed` (`processed`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
