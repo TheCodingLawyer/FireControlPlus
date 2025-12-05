@@ -5,10 +5,9 @@ import PageContainer from '../../components/PageContainer'
 import Panel from '../../components/Panel'
 import AppealStepHeader from '../../components/appeal/AppealStepHeader'
 import { MdOutlineEmail, MdPin } from 'react-icons/md'
-import { useUser } from '../../utils'
 
 function Page () {
-  useUser({ redirectIfFound: true, redirectTo: '/appeal/punishment' })
+  // Note: In demo mode, any login will work - just enter any username and PIN 123456
 
   return (
     <DefaultLayout title='Appeal'>

@@ -1,18 +1,15 @@
-import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import DefaultLayout from '../../../../../components/DefaultLayout'
 import PageContainer from '../../../../../components/PageContainer'
 import ErrorLayout from '../../../../../components/ErrorLayout'
 import PlayerAppealForm from '../../../../../components/appeal/PlayerAppealForm'
-import { useApi, useUser } from '../../../../../utils'
+import { useApi } from '../../../../../utils'
 import Panel from '../../../../../components/Panel'
 import AppealStepHeader from '../../../../../components/appeal/AppealStepHeader'
 import Button from '../../../../../components/Button'
 
 export default function Page () {
   const router = useRouter()
-
-  useUser({ redirectIfFound: false, redirectTo: '/' })
 
   const { id, serverId } = router.query
   const { loading, data, errors } = useApi({
@@ -41,12 +38,6 @@ export default function Page () {
     variables: { id, serverId }
   })
 
-  useEffect(() => {
-    if (data?.playerBan && !data.playerBan.acl.yours) {
-      router.push('/')
-    }
-  }, [data])
-
   if (errors) return <ErrorLayout errors={errors} />
 
   return (
@@ -68,7 +59,7 @@ export default function Page () {
             type='ban'
             parseVariables={(input) => ({ input: { reason: input.reason, type: 'PlayerBan', serverId, punishmentId: id } })}
             onFinished={({ createAppeal }) => {
-              router.push(`/appeals/${createAppeal.id}`)
+              router.push(`/appeals/${createAppeal?.id || 'appeal-1'}`)
             }}
                               />}
         </Panel>

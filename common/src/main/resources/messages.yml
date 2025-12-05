@@ -141,7 +141,7 @@ messages:
   ban:
     player:
       disallowed: '&6You have been banned from this server for &4[reason]'
-      kick: '&6You have been banned permanently for &4[reason]'
+      kick: '&6You have been permanently banned for &4[reason]\n&6Punishment ID: &c#[id]\n&7Appeal at: &btheblockcade.com/appeals/start'
       dateTimeFormat: 'yyyy-MM-dd HH:mm:ss'
     notify: '&6[player] has been permanently banned by [actor] for &4[reason]'
     error:
@@ -154,7 +154,7 @@ messages:
   tempban:
     player:
       disallowed: '&6You have been temporarily banned from this server for &4[reason] \n&6It expires in [expires]'
-      kick: '&6You have been temporarily banned for &4[reason]'
+      kick: '&6You have been temporarily banned for &4[reason]\n&6Expires in: [expires]\n&6Punishment ID: &c#[id]\n&7Appeal at: &btheblockcade.com/appeals/start'
       dateTimeFormat: 'yyyy-MM-dd HH:mm:ss'
     notify: '&6[player] has been temporarily banned for [expires] by [actor] for &4[reason]'
 
@@ -173,7 +173,7 @@ messages:
   mute:
     player:
       blocked: '&cYou may not use the [command] command whilst muted!'
-      disallowed: '&6You have been permanently muted for &4[reason] &6by [actor]'
+      disallowed: '&6You have been permanently muted for &4[reason] &6by [actor]\n&6Punishment ID: &c#[id]\n&7Appeal at: &btheblockcade.com/appeals/start'
       broadcast: '&4[Muted] [player]&7 [message]'
     notify: '&6[player] has been permanently muted by [actor] for &4[reason]'
     error:
@@ -193,7 +193,7 @@ messages:
 
   tempmute:
     player:
-      disallowed: '&6You have been temporarily muted for &4[reason] &6by [actor] which expires in [expires]'
+      disallowed: '&6You have been temporarily muted for &4[reason] &6by [actor] which expires in [expires]\n&6Punishment ID: &c#[id]\n&7Appeal at: &btheblockcade.com/appeals/start'
     notify: '&6[player] has been temporarily muted for [expires] by [actor] for &4[reason]'
     error:
       exists: '&c[player] is already muted'
@@ -300,7 +300,7 @@ messages:
 
   warn:
     player:
-      warned: '&6You have been warned by [actor] for &4[reason]'
+      warned: '&6You have been warned by [actor] for &4[reason]\n&6Punishment ID: &c#[id]\n&7Appeal at: &btheblockcade.com/appeals/start'
       disallowed:
         header: '&cYou may not speak until you have accepted your most recent warning. Please type the following:'
         reason: '&6[reason]'
@@ -311,7 +311,7 @@ messages:
 
   tempwarn:
     player:
-      warned: '&6You have been warned for [expires] by [actor] for &4[reason]'
+      warned: '&6You have been warned for [expires] by [actor] for &4[reason]\n&6Punishment ID: &c#[id]\n&7Appeal at: &btheblockcade.com/appeals/start'
     notify: '&6[player] has been warned for [expires] by [actor] for &4[reason]'
 
   dwarn:

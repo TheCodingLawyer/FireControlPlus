@@ -17,6 +17,8 @@ public class CommandQueueListener implements Runnable {
     private final ProxyServer server;
     private final BanManagerPlugin plugin;
     private final String serverId;
+    private boolean tableChecked = false;
+    private boolean tableExists = false;
 
     public CommandQueueListener(ProxyServer server, BanManagerPlugin plugin) {
         this.server = server;
@@ -30,10 +32,58 @@ public class CommandQueueListener implements Runnable {
     public void run() {
         if (plugin == null) return;
 
+        // Check/create table once on first run
+        if (!tableChecked) {
+            tableChecked = true;
+            tableExists = ensureTableExists();
+            if (!tableExists) {
+                plugin.getLogger().warning("bm_pending_commands table could not be created. Web kicks disabled.");
+                return;
+            }
+        }
+        
+        if (!tableExists) return;
+
         try {
             processKickCommands();
         } catch (Exception e) {
-            plugin.getLogger().warning("Error processing command queue: " + e.getMessage());
+            String msg = e.getMessage();
+            // Don't spam logs for table-not-found errors
+            if (msg == null || (!msg.contains("doesn't exist") && !msg.contains("bm_pending_commands"))) {
+                plugin.getLogger().warning("Error processing command queue: " + msg);
+            }
+        }
+    }
+    
+    private boolean ensureTableExists() {
+        try {
+            // Try to create the table if it doesn't exist
+            String createTableSQL = "CREATE TABLE IF NOT EXISTS bm_pending_commands (" +
+                "id INT AUTO_INCREMENT PRIMARY KEY, " +
+                "server_id VARCHAR(50) NOT NULL DEFAULT 'ALL', " +
+                "command VARCHAR(50) NOT NULL, " +
+                "player_id BINARY(16) NOT NULL, " +
+                "actor_id BINARY(16) NOT NULL, " +
+                "args TEXT, " +
+                "processed TINYINT(1) NOT NULL DEFAULT 0, " +
+                "created BIGINT UNSIGNED NOT NULL, " +
+                "INDEX idx_server_command (server_id, command), " +
+                "INDEX idx_processed (processed)" +
+                ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+            
+            plugin.getPlayerStorage().executeRawNoArgs(createTableSQL);
+            plugin.getLogger().info("bm_pending_commands table ready for web kicks");
+            return true;
+        } catch (SQLException e) {
+            // Table creation failed, try to check if it exists anyway
+            try {
+                plugin.getPlayerStorage().queryRaw("SELECT 1 FROM bm_pending_commands LIMIT 1");
+                plugin.getLogger().info("bm_pending_commands table exists");
+                return true;
+            } catch (SQLException e2) {
+                plugin.getLogger().warning("Could not create bm_pending_commands: " + e.getMessage());
+                return false;
+            }
         }
     }
 

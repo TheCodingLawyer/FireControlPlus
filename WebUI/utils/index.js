@@ -33,7 +33,12 @@ export const absoluteUrl = (req, localhostAddress = 'localhost:3000') => {
   }
 }
 
-const graphQLClient = new GraphQLClient((process.env.BASE_PATH || '') + '/graphql', {
+// Use /api/graphql for Next.js mock API in demo mode, otherwise use /graphql for real backend
+const graphqlEndpoint = typeof window !== 'undefined' 
+  ? (process.env.BASE_PATH || '') + '/api/graphql'  // Client-side: use mock API
+  : (process.env.BASE_PATH || '') + '/graphql'       // Server-side: use real API
+
+const graphQLClient = new GraphQLClient(graphqlEndpoint, {
   credentials: 'include'
 })
 
@@ -114,7 +119,7 @@ export const useMatchMutate = () => {
 }
 
 const userFetcher = () =>
-  fetch((process.env.BASE_PATH || '') + '/graphql', {
+  fetch((process.env.BASE_PATH || '') + '/api/graphql', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
