@@ -427,8 +427,7 @@ public class BanManagerPlugin {
         new NotesCommand(this),
         new ReasonsCommand(this),
         new ReloadCommand(this),
-        new ReportCommand(this),
-        new ReportAdminCommand(this),
+        // new ReportCommand(this), // Disabled to allow Aevorin Reports to register /report
         new ReportsCommand(this),
         new RollbackCommand(this),
         new SyncCommand(this),

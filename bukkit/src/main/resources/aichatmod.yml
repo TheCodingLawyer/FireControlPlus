@@ -1,0 +1,181 @@
+# =================================================
+# AI Chat Moderation Configuration
+# Uses Claude AI to monitor chat for rule violations
+# =================================================
+
+# Enable or disable AI Chat Moderation
+# Note: Even when enabled, requires valid API key to function
+enabled: true
+
+# Claude API Configuration
+claude:
+  # Your Claude API key (get from console.anthropic.com)
+  api-key: 'your-api-key-here'
+  
+  # Model to use for moderation
+  # Options: claude-haiku-4-5-20251001 (default, fastest/cheapest)
+  #          claude-sonnet-4-5-20250929 (balanced)
+  #          claude-opus-4-5-20251101 (most capable)
+  model: 'claude-haiku-4-5-20251001'
+  
+  # Maximum tokens for AI response (keep low for moderation)
+  max-tokens: 150
+  
+  # Timeout for API calls in seconds
+  timeout: 10
+
+# Chat Monitoring Settings
+monitoring:
+  # Check interval in seconds (how often to analyze queued messages)
+  check-interval: 5
+  
+  # Maximum messages to queue before forcing analysis
+  max-queue-size: 20
+  
+  # Only analyze messages from players (not commands)
+  player-messages-only: true
+
+# Bad words and patterns to watch for
+# AI will use these as guidelines but can also detect context-based violations
+filters:
+  # List of explicit bad words (case-insensitive)
+  bad-words:
+    - 'fuck'
+    - 'shit'
+    - 'bitch'
+    - 'nigger'
+    - 'nigga'
+    - 'faggot'
+    - 'retard'
+    - 'cunt'
+    - 'whore'
+    - 'slut'
+  
+  # Patterns to detect (regex)
+  patterns:
+    - '(f+u+c+k+)'
+    - '(s+h+i+t+)'
+    - '(b+i+t+c+h+)'
+  
+  # Categories for AI to watch (AI will determine severity)
+  categories:
+    - 'profanity'
+    - 'harassment'
+    - 'hate-speech'
+    - 'spam'
+    - 'advertising'
+    - 'threats'
+    - 'inappropriate-content'
+
+# Punishment Escalation System
+# Punishments escalate based on offense count within the time window
+punishments:
+  # Time window in minutes to count offenses (resets after this)
+  offense-window: 60
+  
+  # Escalation levels - each offense triggers the next level
+  levels:
+    1:
+      action: 'warn'
+      reason: '[AI Mod] First offense: Inappropriate language detected'
+    2:
+      action: 'mute'
+      duration: '5m'
+      reason: '[AI Mod] Second offense: Continued inappropriate language'
+    3:
+      action: 'mute'
+      duration: '30m'
+      reason: '[AI Mod] Third offense: Repeated violations'
+    4:
+      action: 'mute'
+      duration: '2h'
+      reason: '[AI Mod] Fourth offense: Severe/persistent violations'
+    5:
+      action: 'mute'
+      duration: '24h'
+      reason: '[AI Mod] Fifth offense: Extreme violations - 24h mute'
+    6:
+      action: 'tempban'
+      duration: '7d'
+      reason: '[AI Mod] Maximum offenses reached - Temporary ban'
+
+# Severity Overrides - Skip escalation for severe violations
+severity-overrides:
+  # Hate speech immediately escalates to mute
+  hate-speech:
+    action: 'mute'
+    duration: '1h'
+    reason: '[AI Mod] Hate speech detected - Immediate mute'
+  
+  # Threats escalate to temp ban
+  threats:
+    action: 'tempban'
+    duration: '1d'
+    reason: '[AI Mod] Threatening behavior - Temporary ban'
+
+# Notification Settings
+notifications:
+  # Show "AI Chat Mod active" message to admins
+  status-message:
+    enabled: true
+    # Interval in minutes between status messages (30 minutes by default to avoid spam)
+    interval: 30
+    # Message format (supports color codes)
+    message: '&7[&aAI Chat Mod&7] &8System is active and monitoring chat'
+  
+  # Notify admins when AI takes action
+  action-alerts:
+    enabled: true
+    # Message format: %player%, %action%, %reason%, %category%
+    message: '&7[&cAI Mod&7] &e%player% &7received &c%action% &7for &f%category%'
+
+# Exemptions
+exemptions:
+  # Bypass permissions (players with these won't be moderated)
+  permissions:
+    - 'bm.exempt.aichatmod'
+    - 'bm.admin'
+  
+  # Exempt OPs from moderation
+  exempt-ops: true
+  
+  # Exempt staff with these ranks (uses Vault if available)
+  exempt-groups:
+    - 'admin'
+    - 'moderator'
+    - 'helper'
+
+# Logging
+logging:
+  # Log all AI decisions to console
+  console: true
+  
+  # Log AI actions to file
+  file: true
+  
+  # File location (relative to plugin folder)
+  file-path: 'logs/aichatmod.log'
+  
+  # Log analyzed messages (for debugging)
+  log-analyzed-messages: false
+
+# Advanced Settings
+advanced:
+  # Custom AI system prompt (advanced users only)
+  # Leave empty to use default
+  custom-prompt: ''
+  
+  # Temperature for AI responses (0.0-1.0, lower = more consistent)
+  temperature: 0.1
+  
+  # Confidence threshold (0.0-1.0)
+  # Only take action if AI confidence is above this
+  confidence-threshold: 0.7
+  
+  # Rate limiting
+  max-api-calls-per-minute: 30
+  
+  # Retry failed API calls
+  retry-attempts: 2
+  retry-delay: 1000
+

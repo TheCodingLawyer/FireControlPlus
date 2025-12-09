@@ -29,7 +29,7 @@ public class BMBukkitPlugin extends JavaPlugin {
   private BanManagerPlugin plugin;
   private RedisKickSubscriber redisKickSubscriber;
   private me.confuser.banmanager.bukkit.admingui.AdminGuiBootstrap adminGui;
-  private me.confuser.banmanager.bukkit.tigerreports.TigerReportsBootstrap tigerReports;
+  private me.confuser.banmanager.bukkit.aichatmod.AiChatModBootstrap aiChatMod;
 
   private String[] configs = new String[]{
       "config.yml",
@@ -39,7 +39,8 @@ public class BMBukkitPlugin extends JavaPlugin {
       "geoip.yml",
       "messages.yml",
       "reasons.yml",
-      "schedules.yml"
+      "schedules.yml",
+      "aichatmod.yml"
   };
   private Metrics metrics;
 
@@ -80,20 +81,12 @@ public class BMBukkitPlugin extends JavaPlugin {
       getLogger().warning("AdminGUI integration failed to initialize: " + t.getMessage());
     }
 
-    // Initialize integrated TigerReports
+    // Initialize AI Chat Moderation
     try {
-      tigerReports = new me.confuser.banmanager.bukkit.tigerreports.TigerReportsBootstrap(this);
-      tigerReports.enable();
+      aiChatMod = new me.confuser.banmanager.bukkit.aichatmod.AiChatModBootstrap(this);
+      aiChatMod.enable();
     } catch (Throwable t) {
-      getLogger().warning("TigerReports integration failed to initialize: " + t.getMessage());
-    }
-
-    // Initialize integrated UltrixReports
-    try {
-      me.confuser.banmanager.ultixreports.UltrixReports.initializeWithBanManager(this);
-      getLogger().info("UltrixReports integration initialized successfully");
-    } catch (Throwable t) {
-      getLogger().warning("UltrixReports integration failed to initialize: " + t.getMessage());
+      getLogger().warning("AI Chat Mod integration failed to initialize: " + t.getMessage());
     }
 
     // Start Redis kick subscriber if available
@@ -116,15 +109,10 @@ public class BMBukkitPlugin extends JavaPlugin {
       try { adminGui.disable(); } catch (Throwable ignored) {}
     }
 
-    // Shutdown TigerReports
-    if (tigerReports != null) {
-      try { tigerReports.disable(); } catch (Throwable ignored) {}
+    // Shutdown AI Chat Mod
+    if (aiChatMod != null) {
+      try { aiChatMod.disable(); } catch (Throwable ignored) {}
     }
-
-    // Shutdown UltrixReports
-    try {
-      me.confuser.banmanager.ultixreports.UltrixReports.shutdown();
-    } catch (Throwable ignored) {}
 
     if (plugin != null) plugin.disable();
   }

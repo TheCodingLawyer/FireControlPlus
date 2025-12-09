@@ -16,9 +16,9 @@ api-version: 1.13
 
 commands:
   admin:
-    description: "Show Admin GUI"
+    description: "Show Staff GUI"
     usage: "/admin"
-    aliases: [admingui]
+    aliases: [admingui, staff, staffgui]
     permission: admingui.admin
   adminchat:
     description: "Manage with Admin Chat"
@@ -281,16 +281,12 @@ commands:
     usage: "/reports [player]"
     aliases: [bmreports]
     permission: bm.command.reports
-  report:
-    description: "Create a player report"
-    usage: "/report <player> <reason>"
-    aliases: [bmreport]
-    permission: bm.command.report
-  reportadmin:
-    description: "Toggle admin report mode for testing"
-    usage: "/reportadmin"
-    aliases: [bmreportadmin]
-    permission: bm.command.reportadmin
+  # report command disabled to allow Aevorin Reports to register /report
+  # report:
+  #   description: "Create a player report"
+  #   usage: "/report <player> <reason>"
+  #   aliases: [bmreport]
+  #   permission: bm.command.report
   createreport:
     description: "Staff command to create a player report"
     usage: "/createreport <player> <reason>"
@@ -398,6 +394,11 @@ commands:
     usage: "/addnoteall <player> <message>"
     aliases: [bmaddnoteall]
     permission: bm.command.addnoteall
+  chatmod:
+    description: "View AI Chat Moderation actions and stats"
+    usage: "/chatmod [list|player|category|stats|status|reload]"
+    aliases: [aichatmod, aimod]
+    permission: bm.command.chatmod
   muteipall:
     description: "mutes an ip across multiple servers"
     usage: "/muteipall <ip || player> <reason>"
@@ -713,3 +714,18 @@ permissions:
       bm.exempt.tempmute: true
       bm.exempt.warn: true
       bm.exempt.report: true
+      bm.exempt.aichatmod: true
+  
+  # AI Chat Mod permissions
+  bm.command.chatmod:
+    description: View AI Chat Mod actions and statistics
+    default: op
+  bm.command.chatmod.reload:
+    description: Reload AI Chat Mod configuration
+    default: op
+  bm.notify.aichatmod:
+    description: Receive notifications when AI Chat Mod takes action
+    default: op
+  bm.exempt.aichatmod:
+    description: Exempt from AI Chat Mod monitoring
+    default: op

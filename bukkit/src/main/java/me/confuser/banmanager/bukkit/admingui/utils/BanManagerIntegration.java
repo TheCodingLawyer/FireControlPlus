@@ -8,6 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -45,6 +47,22 @@ public class BanManagerIntegration {
         return getBanManagerPlugin() != null;
     }
 
+    private static org.bukkit.command.CommandSender resolveSender(String actorUUID, String actorName) {
+        try {
+            if (actorUUID != null) {
+                UUID uuid = UUID.fromString(actorUUID);
+                org.bukkit.entity.Player p = Bukkit.getPlayer(uuid);
+                if (p != null) return p;
+            }
+            if (actorName != null) {
+                org.bukkit.entity.Player p = Bukkit.getPlayerExact(actorName);
+                if (p != null) return p;
+            }
+        } catch (Exception ignored) {
+        }
+        return Bukkit.getConsoleSender();
+    }
+
     /**
      * Ban a player using BanManager commands
      * @param actorUUID The UUID of the admin performing the ban
@@ -60,18 +78,21 @@ public class BanManagerIntegration {
 
         try {
             String cleanedReason = cleanReason(reason);
+            String silentFlag = silent ? "-s " : "";
             String command;
             if (expires == null) {
-                // Permanent ban - always use silent command to avoid duplicate messages
-                command = "bmsilentban " + targetName + " " + cleanedReason;
+                // Permanent ban: ban <player> [-s] <reason>
+                command = "ban " + targetName + " " + silentFlag + cleanedReason;
             } else {
-                // Temporary ban - always use silent command to avoid duplicate messages
+                // Temporary ban: tempban <player> <time> [-s] <reason>
                 long durationSeconds = (expires.getTime() - System.currentTimeMillis()) / 1000;
-                command = "bmsilenttempban " + targetName + " " + durationSeconds + "s " + cleanedReason;
+                command = "tempban " + targetName + " " + durationSeconds + "s " + silentFlag + cleanedReason;
             }
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+            Bukkit.getLogger().info("[AdminGUI] Executing: " + command);
+            Bukkit.dispatchCommand(resolveSender(actorUUID, actorName), command);
             return true;
         } catch (Exception e) {
+            Bukkit.getLogger().severe("[AdminGUI] Ban command failed: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -108,18 +129,21 @@ public class BanManagerIntegration {
 
         try {
             String cleanedReason = cleanReason(reason);
+            String silentFlag = silent ? "-s " : "";
             String command;
             if (expires == null) {
-                // Permanent mute - always use silent command to avoid duplicate messages
-                command = "bmsilentmute " + targetName + " " + cleanedReason;
+                // Permanent mute: mute <player> [-s] <reason>
+                command = "mute " + targetName + " " + silentFlag + cleanedReason;
             } else {
-                // Temporary mute - always use silent command to avoid duplicate messages
+                // Temporary mute: tempmute <player> <time> [-s] <reason>
                 long durationSeconds = (expires.getTime() - System.currentTimeMillis()) / 1000;
-                command = "bmsilenttempmute " + targetName + " " + durationSeconds + "s " + cleanedReason;
+                command = "tempmute " + targetName + " " + durationSeconds + "s " + silentFlag + cleanedReason;
             }
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+            Bukkit.getLogger().info("[AdminGUI] Executing: " + command);
+            Bukkit.dispatchCommand(resolveSender(actorUUID, actorName), command);
             return true;
         } catch (Exception e) {
+            Bukkit.getLogger().severe("[AdminGUI] Mute command failed: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -148,16 +172,21 @@ public class BanManagerIntegration {
      * @param targetUUID The UUID of the player to kick
      * @param targetName The name of the player to kick
      * @param reason The kick reason
+     * @param silent Whether the kick should be silent
      */
-    public static boolean kickPlayer(String actorUUID, String actorName, String targetUUID, String targetName, String reason) {
+    public static boolean kickPlayer(String actorUUID, String actorName, String targetUUID, String targetName, String reason, boolean silent) {
         if (!isBanManagerEnabled()) return false;
 
         try {
             String cleanedReason = cleanReason(reason);
-            // Use silent kick command to avoid duplicate messages
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bmsilentkick " + targetName + " " + cleanedReason);
+            String silentFlag = silent ? "-s " : "";
+            // kick <player> [-s] <reason>
+            String command = "kick " + targetName + " " + silentFlag + cleanedReason;
+            Bukkit.getLogger().info("[AdminGUI] Executing: " + command);
+            Bukkit.dispatchCommand(resolveSender(actorUUID, actorName), command);
             return true;
         } catch (Exception e) {
+            Bukkit.getLogger().severe("[AdminGUI] Kick command failed: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -178,78 +207,205 @@ public class BanManagerIntegration {
 
         try {
             String cleanedReason = cleanReason(reason);
+            String silentFlag = silent ? "-s " : "";
             String command;
             if (expires == null) {
-                // Permanent warning - always use silent command to avoid duplicate messages
-                command = "bmsilentwarn " + targetName + " " + cleanedReason;
+                // Permanent warning: warn <player> [-s] <reason>
+                command = "warn " + targetName + " " + silentFlag + cleanedReason;
             } else {
-                // Temporary warning - always use silent command to avoid duplicate messages
+                // Temporary warning: tempwarn <player> <time> [-s] <reason>
                 long durationSeconds = (expires.getTime() - System.currentTimeMillis()) / 1000;
-                command = "bmsilenttempwarn " + targetName + " " + durationSeconds + "s " + cleanedReason;
+                command = "tempwarn " + targetName + " " + durationSeconds + "s " + silentFlag + cleanedReason;
             }
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+            Bukkit.getLogger().info("[AdminGUI] Executing: " + command);
+            Bukkit.dispatchCommand(resolveSender(actorUUID, actorName), command);
             return true;
         } catch (Exception e) {
+            Bukkit.getLogger().severe("[AdminGUI] Warn command failed: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
     }
 
     /**
-     * Get all banned players - returns null to use existing GUI logic
-     * BanManager API access varies by version, so we let the GUI handle this
+     * Get all banned players from BanManager's database
+     * @return List of all active bans, or empty list if none
      */
     public static List<PlayerBanData> getBannedPlayers() {
-        // Let the GUI use its existing logic for listing banned players
-        return null;
+        BanManagerPlugin plugin = getBanManagerPlugin();
+        if (plugin == null) return new ArrayList<>();
+        
+        try {
+            Collection<PlayerBanData> bans = plugin.getPlayerBanStorage().getBans().values();
+            return new ArrayList<>(bans);
+        } catch (Exception e) {
+            Bukkit.getLogger().warning("[AdminGUI] Failed to get banned players: " + e.getMessage());
+            return new ArrayList<>();
+        }
     }
 
     /**
-     * Get all muted players - returns null to use existing GUI logic
-     * BanManager API access varies by version, so we let the GUI handle this
+     * Get all muted players from BanManager's database
+     * @return List of all active mutes, or empty list if none
      */
     public static List<PlayerMuteData> getMutedPlayers() {
-        // Let the GUI use its existing logic for listing muted players
-        return null;
+        BanManagerPlugin plugin = getBanManagerPlugin();
+        if (plugin == null) return new ArrayList<>();
+        
+        try {
+            Collection<PlayerMuteData> mutes = plugin.getPlayerMuteStorage().getMutes().values();
+            return new ArrayList<>(mutes);
+        } catch (Exception e) {
+            Bukkit.getLogger().warning("[AdminGUI] Failed to get muted players: " + e.getMessage());
+            return new ArrayList<>();
+        }
     }
 
     /**
-     * Check if a player is banned - simplified version
+     * Check if a player is banned in BanManager
      * @param uuid The player's UUID
-     * @return false (let existing GUI logic handle this)
+     * @return true if banned, false otherwise
      */
     public static boolean isBanned(UUID uuid) {
-        // Let the GUI use its existing logic for ban checking
-        return false;
+        BanManagerPlugin plugin = getBanManagerPlugin();
+        if (plugin == null) return false;
+        
+        try {
+            return plugin.getPlayerBanStorage().isBanned(uuid);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /**
-     * Check if a player is muted - simplified version
+     * Check if a player is muted in BanManager
      * @param uuid The player's UUID
-     * @return false (let existing GUI logic handle this)
+     * @return true if muted, false otherwise
      */
     public static boolean isMuted(UUID uuid) {
-        // Let the GUI use its existing logic for mute checking
-        return false;
+        BanManagerPlugin plugin = getBanManagerPlugin();
+        if (plugin == null) return false;
+        
+        try {
+            return plugin.getPlayerMuteStorage().isMuted(uuid);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /**
-     * Get player's ban information - simplified version
+     * Get player's ban information from BanManager
      * @param uuid The player's UUID
-     * @return null (let existing GUI logic handle this)
+     * @return PlayerBanData or null if not banned
      */
     public static PlayerBanData getPlayerBan(UUID uuid) {
-        // Let the GUI use its existing logic
-        return null;
+        BanManagerPlugin plugin = getBanManagerPlugin();
+        if (plugin == null) return null;
+        
+        try {
+            return plugin.getPlayerBanStorage().getBan(uuid);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**
-     * Get player's mute information - simplified version
+     * Get player's mute information from BanManager
      * @param uuid The player's UUID
-     * @return null (let existing GUI logic handle this)
+     * @return PlayerMuteData or null if not muted
      */
     public static PlayerMuteData getPlayerMute(UUID uuid) {
-        // Let the GUI use its existing logic
+        BanManagerPlugin plugin = getBanManagerPlugin();
+        if (plugin == null) return null;
+        
+        try {
+            return plugin.getPlayerMuteStorage().getMute(uuid);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    /**
+     * Get a list of banned player names for the AdminGUI
+     * @return List of banned player names
+     */
+    public static List<String> getBannedPlayerNames() {
+        List<String> names = new ArrayList<>();
+        for (PlayerBanData ban : getBannedPlayers()) {
+            if (ban.getPlayer() != null && ban.getPlayer().getName() != null) {
+                names.add(ban.getPlayer().getName());
+            }
+        }
+        return names;
+    }
+    
+    /**
+     * Get a list of muted player names for the AdminGUI
+     * @return List of muted player names
+     */
+    public static List<String> getMutedPlayerNames() {
+        List<String> names = new ArrayList<>();
+        for (PlayerMuteData mute : getMutedPlayers()) {
+            if (mute.getPlayer() != null && mute.getPlayer().getName() != null) {
+                names.add(mute.getPlayer().getName());
+            }
+        }
+        return names;
+    }
+    
+    /**
+     * Get ban info for display in AdminGUI
+     * @param playerName The player's name
+     * @return BannedPlayerIn object with ban details, or null if not found
+     */
+    public static BannedPlayerIn getBanInfo(String playerName) {
+        for (PlayerBanData ban : getBannedPlayers()) {
+            if (ban.getPlayer() != null && ban.getPlayer().getName() != null 
+                && ban.getPlayer().getName().equalsIgnoreCase(playerName)) {
+                
+                Date until = ban.getExpires() == 0 ? null : new Date(ban.getExpires() * 1000L);
+                Date created = new Date(ban.getCreated() * 1000L);
+                
+                return new BannedPlayerIn(
+                    ban.getActor().getUUID().toString(),
+                    ban.getActor().getName(),
+                    ban.getPlayer().getUUID().toString(),
+                    ban.getPlayer().getName(),
+                    ban.getReason(),
+                    until,
+                    "local",
+                    created
+                );
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Get mute info for display in AdminGUI
+     * @param playerName The player's name
+     * @return MutedPlayerIn object with mute details, or null if not found
+     */
+    public static MutedPlayerIn getMuteInfo(String playerName) {
+        for (PlayerMuteData mute : getMutedPlayers()) {
+            if (mute.getPlayer() != null && mute.getPlayer().getName() != null 
+                && mute.getPlayer().getName().equalsIgnoreCase(playerName)) {
+                
+                Date until = mute.getExpires() == 0 ? null : new Date(mute.getExpires() * 1000L);
+                Date created = new Date(mute.getCreated() * 1000L);
+                
+                return new MutedPlayerIn(
+                    mute.getActor().getUUID().toString(),
+                    mute.getActor().getName(),
+                    mute.getPlayer().getUUID().toString(),
+                    mute.getPlayer().getName(),
+                    mute.getReason(),
+                    until,
+                    "local",
+                    created
+                );
+            }
+        }
         return null;
     }
 }

@@ -8,6 +8,7 @@ import me.confuser.banmanager.bukkit.admingui.utils.TargetPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
@@ -24,17 +25,36 @@ public class PlayerCommandListener implements Listener {
 		Bukkit.getPluginManager().registerEvents(this, plugin.getBanManagerPlugin());
 	}
 
-	@EventHandler
+	/**
+	 * Use LOWEST priority to intercept /admin BEFORE any other plugin can process it.
+	 * ignoreCancelled = false ensures we process even if another plugin already cancelled.
+	 * This fixes the issue where another plugin's /admin command overrides ours.
+	 */
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
 	public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
 		Player p = event.getPlayer();
 		String message = event.getMessage();
 
 		// Ensure AdminGUI commands work even if another plugin also registers them
+		// We intercept at LOWEST priority to guarantee we run first
 		String lower = message.toLowerCase();
 		if (lower.startsWith("/admin ") || lower.equals("/admin")) {
-			// Directly execute our admin command instead of redirecting
+			// CRITICAL: Cancel immediately so no other plugin processes this command
 			event.setCancelled(true);
+			
+			// Debug logging
+			Bukkit.getLogger().info("[BanManager AdminGUI] Intercepted /admin command from " + p.getName());
+			Bukkit.getLogger().info("[BanManager AdminGUI] Player isOp: " + p.isOp());
+			Bukkit.getLogger().info("[BanManager AdminGUI] Player has admingui.admin: " + p.hasPermission("admingui.admin"));
+			
 			String[] args = message.length() > 7 ? message.substring(7).split(" ") : new String[0];
+			new me.confuser.banmanager.bukkit.admingui.commands.Admin().onCommand(p, null, "admin", args);
+			return;
+		}
+		// Also intercept /admingui (alias)
+		if (lower.startsWith("/admingui ") || lower.equals("/admingui")) {
+			event.setCancelled(true);
+			String[] args = message.length() > 10 ? message.substring(10).split(" ") : new String[0];
 			new me.confuser.banmanager.bukkit.admingui.commands.Admin().onCommand(p, null, "admin", args);
 			return;
 		}

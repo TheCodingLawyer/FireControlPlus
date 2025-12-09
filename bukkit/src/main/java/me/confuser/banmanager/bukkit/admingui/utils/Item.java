@@ -4,6 +4,7 @@ import me.confuser.banmanager.bukkit.admingui.XMaterial;
 import org.bukkit.SkullType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -22,6 +23,13 @@ public class Item {
 			meta.setDisplayName(Message.chat(displayName));
 			for (String s : loreString) lore.add(Message.chat(s));
 			meta.setLore(lore);
+			// Hide all item attributes
+			try {
+				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE, 
+					ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
+			} catch (Exception ignored) {
+				// ItemFlag might not exist in older versions
+			}
 			item.setItemMeta(meta);
 		}
 
@@ -75,6 +83,12 @@ public class Item {
 			meta.setDisplayName(Message.chat(displayName));
 			for (String s : loreString) lore.add(Message.chat(s));
 			meta.setLore(lore);
+			// Hide all item attributes
+			try {
+				meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE);
+			} catch (Exception ignored) {
+				// ItemFlag might not exist in older versions
+			}
 			item.setItemMeta(meta);
 		}
 

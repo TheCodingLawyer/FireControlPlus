@@ -13,5 +13,14 @@ public enum Version_8 {
 	potions_poison,
 	potions_regeneration,
 	potions_strength,
-	potions_weakness
+	potions_weakness,
+	potions_absorption,
+	potions_health_boost,
+	potions_hunger,
+	potions_mining_fatigue,
+	potions_nausea,
+	potions_resistance,
+	potions_saturation,
+	potions_wither,
+	potions_haste
 }

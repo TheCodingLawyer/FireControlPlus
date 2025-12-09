@@ -19,13 +19,20 @@ public class PlayerMoveListener implements Listener {
 		Bukkit.getPluginManager().registerEvents(this, plugin.getBanManagerPlugin());
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerMove(PlayerMoveEvent e) {
 		Player p = e.getPlayer();
 
+		// Freeze - prevent ALL movement (not just block changes)
 		if (Settings.freeze.getOrDefault(p.getUniqueId(), false) && AdminGuiIntegration.getInstance().getConf().getBoolean("freeze_player_move", true) && e.getTo() != null) {
-			if (e.getFrom().getBlockX() != e.getTo().getBlockX() || e.getFrom().getBlockY() != e.getTo().getBlockY() || e.getFrom().getBlockZ() != e.getTo().getBlockZ())
+			// Cancel any position change (including tiny movements)
+			if (e.getFrom().getX() != e.getTo().getX() || 
+			    e.getFrom().getY() != e.getTo().getY() || 
+			    e.getFrom().getZ() != e.getTo().getZ()) {
 				e.setCancelled(true);
+				// Teleport player back to exact location to prevent any drift
+				p.teleport(e.getFrom());
+			}
 		}
 	}
 

@@ -36,11 +36,9 @@ public class ReportCommand extends CommonCommand {
     }
 
     if (parser.args[0].equalsIgnoreCase(sender.getName())) {
-      // Allow self-reporting if in admin report mode
-      if (sender instanceof CommonPlayer && !ReportAdminCommand.isInAdminReportMode(((CommonPlayer) sender).getUniqueId())) {
-        sender.sendMessage(Message.getString("sender.error.noSelf"));
-        return true;
-      }
+      // Disallow self-reporting
+      sender.sendMessage(Message.getString("sender.error.noSelf"));
+      return true;
     }
 
     // Check if UUID vs name

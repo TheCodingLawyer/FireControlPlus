@@ -26,10 +26,18 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
+
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandMap;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.SimpleCommandMap;
 
 /**
  * Real AdminGUI integration class - contains the actual AdminGUI code adapted for BanManager
@@ -52,6 +60,7 @@ public class AdminGuiIntegration implements PluginMessageListener {
     private final BMBukkitPlugin banManagerPlugin;
     private final Logger logger;
     private final File dataFolder;
+    private me.confuser.banmanager.bukkit.admingui.reports.AevorinReportsGUI reportsGUI;
     
     private final YamlConfiguration conf = new YamlConfiguration();
     private final YamlConfiguration sett = new YamlConfiguration();
@@ -96,6 +105,10 @@ public class AdminGuiIntegration implements PluginMessageListener {
 
     public static AdminGuiIntegration getInstance() {
         return instance;
+    }
+    
+    public me.confuser.banmanager.bukkit.admingui.reports.AevorinReportsGUI getReportsGUI() {
+        return reportsGUI;
     }
 
     public void enable() {
@@ -167,6 +180,10 @@ public class AdminGuiIntegration implements PluginMessageListener {
             new InventoryClickListener(this);
             if (Bukkit.getVersion().contains("1.8")) new PlayerDamageListener(this);
 
+            // Aevorin Reports GUI
+            this.reportsGUI = new me.confuser.banmanager.bukkit.admingui.reports.AevorinReportsGUI(this);
+            logger.info("Initialized Aevorin Reports GUI integration");
+
             new PlayerJoinListener(this);
             new PlayerLeaveListener(this);
             new PlayerLoginListener(this);
@@ -201,31 +218,19 @@ public class AdminGuiIntegration implements PluginMessageListener {
                 banManagerPlugin.getCommand("admin").setTabCompleter(new me.confuser.banmanager.bukkit.admingui.TabCompletion());
                 logger.info("Registered /admin command for AdminGUI");
                 
-                // Multiple delayed re-registrations to aggressively override other plugins
-                Bukkit.getScheduler().runTaskLater(banManagerPlugin, () -> {
-                    if (banManagerPlugin.getCommand("admin") != null) {
-                        banManagerPlugin.getCommand("admin").setExecutor(new Admin());
-                        banManagerPlugin.getCommand("admin").setTabCompleter(new me.confuser.banmanager.bukkit.admingui.TabCompletion());
-                        logger.info("Re-registered /admin command (1st attempt)");
-                    }
-                }, 20L); // 1 second delay
+                // FORCE override using reflection - this ensures /admin is ours no matter what
+                forceRegisterAdminCommand();
                 
-                // Second attempt after 5 seconds
+                // Also do delayed force-registration in case other plugins load later
                 Bukkit.getScheduler().runTaskLater(banManagerPlugin, () -> {
-                    if (banManagerPlugin.getCommand("admin") != null) {
-                        banManagerPlugin.getCommand("admin").setExecutor(new Admin());
-                        banManagerPlugin.getCommand("admin").setTabCompleter(new me.confuser.banmanager.bukkit.admingui.TabCompletion());
-                        logger.info("Re-registered /admin command (2nd attempt)");
-                    }
-                }, 100L); // 5 second delay
+                    forceRegisterAdminCommand();
+                    logger.info("Force re-registered /admin command (delayed)");
+                }, 40L); // 2 second delay
                 
-                // Third attempt after 10 seconds
+                // Final force registration after all plugins should be loaded
                 Bukkit.getScheduler().runTaskLater(banManagerPlugin, () -> {
-                    if (banManagerPlugin.getCommand("admin") != null) {
-                        banManagerPlugin.getCommand("admin").setExecutor(new Admin());
-                        banManagerPlugin.getCommand("admin").setTabCompleter(new me.confuser.banmanager.bukkit.admingui.TabCompletion());
-                        logger.info("Final re-registration of /admin command");
-                    }
+                    forceRegisterAdminCommand();
+                    logger.info("Final force registration of /admin command");
                 }, 200L); // 10 second delay
             } else {
                 logger.warning("Failed to register /admin command - command not found in plugin.yml");
@@ -561,5 +566,121 @@ public class AdminGuiIntegration implements PluginMessageListener {
     
     public Logger getLogger() {
         return logger;
+    }
+    
+    /**
+     * Force register the /admin command using reflection to override any other plugin's registration.
+     * This is the nuclear option - it directly manipulates Bukkit's command map.
+     */
+    private void forceRegisterAdminCommand() {
+        try {
+            // Get the server's command map using reflection
+            Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+            commandMapField.setAccessible(true);
+            CommandMap commandMap = (CommandMap) commandMapField.get(Bukkit.getServer());
+            
+            // Get the known commands map from SimpleCommandMap
+            Field knownCommandsField = SimpleCommandMap.class.getDeclaredField("knownCommands");
+            knownCommandsField.setAccessible(true);
+            @SuppressWarnings("unchecked")
+            Map<String, Command> knownCommands = (Map<String, Command>) knownCommandsField.get(commandMap);
+            
+            // Get our admin command
+            PluginCommand ourAdminCommand = banManagerPlugin.getCommand("admin");
+            if (ourAdminCommand == null) {
+                logger.warning("[Reflection] Our /admin command not found in plugin.yml");
+                return;
+            }
+            
+            // Set our executor and tab completer
+            ourAdminCommand.setExecutor(new Admin());
+            ourAdminCommand.setTabCompleter(new me.confuser.banmanager.bukkit.admingui.TabCompletion());
+            
+            // Remove any existing /admin commands from other plugins
+            Command existingAdmin = knownCommands.get("admin");
+            if (existingAdmin != null && existingAdmin != ourAdminCommand) {
+                // Unregister the other plugin's command
+                existingAdmin.unregister(commandMap);
+                knownCommands.remove("admin");
+                logger.info("[Reflection] Removed conflicting /admin command from: " + 
+                    (existingAdmin instanceof PluginCommand ? ((PluginCommand) existingAdmin).getPlugin().getName() : "unknown"));
+            }
+            
+            // Also check for aliases that might conflict
+            Command existingAdmingui = knownCommands.get("admingui");
+            if (existingAdmingui != null && existingAdmingui != ourAdminCommand) {
+                existingAdmingui.unregister(commandMap);
+                knownCommands.remove("admingui");
+                logger.info("[Reflection] Removed conflicting /admingui alias");
+            }
+            
+            // Force register our command
+            knownCommands.put("admin", ourAdminCommand);
+            knownCommands.put("admingui", ourAdminCommand);
+            knownCommands.put("staff", ourAdminCommand);
+            knownCommands.put("staffgui", ourAdminCommand);
+            
+            // Also register with banmanager: prefix to ensure it always works
+            knownCommands.put("banmanager:admin", ourAdminCommand);
+            knownCommands.put("banmanager:admingui", ourAdminCommand);
+            knownCommands.put("banmanager:staff", ourAdminCommand);
+            knownCommands.put("banmanager:staffgui", ourAdminCommand);
+            
+            // Try to register in the command map properly
+            try {
+                // Use the register method if available
+                Method registerMethod = commandMap.getClass().getMethod("register", String.class, Command.class);
+                registerMethod.invoke(commandMap, "banmanager", ourAdminCommand);
+            } catch (NoSuchMethodException e) {
+                // Fallback - just ensure it's in the known commands
+                logger.fine("[Reflection] Could not find register method, using direct map insertion");
+            }
+            
+            logger.info("[Reflection] Successfully force-registered /admin command for AdminGUI");
+            
+        } catch (NoSuchFieldException e) {
+            logger.warning("[Reflection] Could not find commandMap field: " + e.getMessage());
+            // Try alternative approach for Paper/Spigot
+            tryAlternativeReflection();
+        } catch (Exception e) {
+            logger.warning("[Reflection] Failed to force-register /admin command: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Alternative reflection approach for Paper servers
+     */
+    private void tryAlternativeReflection() {
+        try {
+            // Paper uses a different approach - try to get command map through CraftServer
+            Object craftServer = Bukkit.getServer();
+            Method getCommandMapMethod = craftServer.getClass().getMethod("getCommandMap");
+            CommandMap commandMap = (CommandMap) getCommandMapMethod.invoke(craftServer);
+            
+            if (commandMap instanceof SimpleCommandMap) {
+                Field knownCommandsField = SimpleCommandMap.class.getDeclaredField("knownCommands");
+                knownCommandsField.setAccessible(true);
+                @SuppressWarnings("unchecked")
+                Map<String, Command> knownCommands = (Map<String, Command>) knownCommandsField.get(commandMap);
+                
+                PluginCommand ourAdminCommand = banManagerPlugin.getCommand("admin");
+                if (ourAdminCommand != null) {
+                    ourAdminCommand.setExecutor(new Admin());
+                    ourAdminCommand.setTabCompleter(new me.confuser.banmanager.bukkit.admingui.TabCompletion());
+                    
+                    // Remove and re-add
+                    knownCommands.remove("admin");
+                    knownCommands.put("admin", ourAdminCommand);
+                    knownCommands.put("admingui", ourAdminCommand);
+                    knownCommands.put("staff", ourAdminCommand);
+                    knownCommands.put("staffgui", ourAdminCommand);
+                    
+                    logger.info("[Reflection-Alt] Successfully force-registered /admin and /staff commands");
+                }
+            }
+        } catch (Exception e) {
+            logger.warning("[Reflection-Alt] Alternative approach also failed: " + e.getMessage());
+        }
     }
 } 

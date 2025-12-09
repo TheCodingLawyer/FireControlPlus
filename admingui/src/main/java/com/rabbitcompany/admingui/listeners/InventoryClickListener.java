@@ -86,7 +86,12 @@ public class InventoryClickListener implements Listener {
 					}
 				}
 			}
-		} catch (Exception ignored) {
+		} catch (Exception ex) {
+			// Log the exception for debugging instead of silently ignoring it
+			adminGUI.getLogger().warning("InventoryClickListener error: " + ex.getMessage());
+			if (adminGUI.getConf().getBoolean("debug", false)) {
+				ex.printStackTrace();
+			}
 		}
 	}
 }

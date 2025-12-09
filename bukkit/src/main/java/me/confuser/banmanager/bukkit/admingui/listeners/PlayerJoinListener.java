@@ -111,6 +111,22 @@ public class PlayerJoinListener implements Listener {
 			if (AdminGuiIntegration.getInstance().getConf().getString("freeze_title", null) != null && AdminGuiIntegration.getInstance().getConf().getString("freeze_subtitle", null) != null)
 				player.sendTitle(Message.chat(AdminGuiIntegration.getInstance().getConf().getString("freeze_title", "")), Message.chat(AdminGuiIntegration.getInstance().getConf().getString("freeze_subtitle", "")), 50, 72000, 50);
 		}
+		
+		//Vanish - handle vanished players on join (hide from EVERYONE, no exceptions)
+		// Check if any online players are vanished - hide them from this joining player
+		for (Player online : Bukkit.getOnlinePlayers()) {
+			if (!online.equals(player) && Settings.vanish.getOrDefault(online.getUniqueId(), false)) {
+				player.hidePlayer(adminGUI.getBanManagerPlugin(), online);
+			}
+		}
+		// If this joining player is vanished, hide them from all others
+		if (Settings.vanish.getOrDefault(player.getUniqueId(), false)) {
+			for (Player online : Bukkit.getOnlinePlayers()) {
+				if (!online.equals(player)) {
+					online.hidePlayer(adminGUI.getBanManagerPlugin(), player);
+				}
+			}
+		}
 	}
 }
 

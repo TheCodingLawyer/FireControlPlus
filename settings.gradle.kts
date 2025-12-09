@@ -12,6 +12,10 @@ include("fabric")
 include("libs")
 project(":libs").name = "BanManagerLibs"
 
+include("admingui")
+project(":admingui").name = "AdminGUI"
+
+
 
 
 

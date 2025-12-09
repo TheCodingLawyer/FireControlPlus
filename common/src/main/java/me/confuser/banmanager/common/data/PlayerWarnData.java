@@ -32,6 +32,10 @@ public class PlayerWarnData {
 
   @DatabaseField(index = true, columnDefinition = "BIGINT UNSIGNED NOT NULL")
   @Getter
+  private long updated = created;
+
+  @DatabaseField(index = true, columnDefinition = "BIGINT UNSIGNED NOT NULL")
+  @Getter
   private long expires = 0;
 
   @DatabaseField(index = true)
@@ -52,6 +56,7 @@ public class PlayerWarnData {
     this.reason = reason;
     this.actor = actor;
     this.points = points;
+    this.updated = this.created;
   }
 
   public PlayerWarnData(PlayerData player, PlayerData actor, String reason, double points, boolean read) {
@@ -64,6 +69,7 @@ public class PlayerWarnData {
     this(player, actor, reason, points, read);
 
     this.expires = expires;
+    this.updated = this.created;
   }
 
   // Imports only!
@@ -71,6 +77,7 @@ public class PlayerWarnData {
     this(player, actor, reason, 1, read, expires);
 
     this.created = created;
+    this.updated = created;
   }
 
 }

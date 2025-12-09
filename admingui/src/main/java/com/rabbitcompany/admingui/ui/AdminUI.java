@@ -19,6 +19,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -802,6 +804,8 @@ public class AdminUI {
 				Item.create(inv_players_settings, "RED_STAINED_GLASS_PANE", 1, 15, Message.getMessage(p.getUniqueId(), "permission"));
 			}
 
+			// Actions button (slot 23 - for non-skull mode too)
+			Item.create(inv_players_settings, "DIAMOND_SWORD", 1, 23, Message.getMessage(p.getUniqueId(), "players_settings_actions"));
 
 			Item.create(inv_players_settings, "REDSTONE_BLOCK", 1, 27, Message.getMessage(p.getUniqueId(), "players_settings_back"));
 		}
@@ -1873,13 +1877,41 @@ public class AdminUI {
 			page.put(p.getUniqueId(), page.getOrDefault(p.getUniqueId(), 1) + 1);
 			p.openInventory(GUI_Players(p));
 		} else if (clicked.getItemMeta() != null) {
-			String displayNameStripped = ChatColor.stripColor(clicked.getItemMeta().getDisplayName());
-			boolean isPlayerHead = clicked.getType() == XMaterial.PLAYER_HEAD.parseMaterial();
-			boolean loreMatches = clicked.getItemMeta().getLore() != null && clicked.getItemMeta().getLore().contains(Message.getMessage(p.getUniqueId(), "players_more"));
+			ItemMeta meta = clicked.getItemMeta();
+			String displayNameStripped = ChatColor.stripColor(meta.getDisplayName());
+			
+			// Multiple methods to detect player head (for compatibility)
+			Material clickedType = clicked.getType();
+			boolean isPlayerHead = clickedType == XMaterial.PLAYER_HEAD.parseMaterial() 
+				|| clickedType == Material.PLAYER_HEAD 
+				|| clickedType.name().contains("SKULL") 
+				|| clickedType.name().contains("HEAD");
+			
+			// FIX: Use Message.chat() to convert & codes to § codes for proper comparison
+			String expectedLore = Message.chat(Message.getMessage(p.getUniqueId(), "players_more"));
+			boolean loreMatches = meta.getLore() != null && meta.getLore().contains(expectedLore);
+			
+			// Also try to get player name from skull owner if it's a skull
+			String targetName = displayNameStripped;
+			if (meta instanceof SkullMeta) {
+				SkullMeta skullMeta = (SkullMeta) meta;
+				if (skullMeta.getOwningPlayer() != null) {
+					targetName = skullMeta.getOwningPlayer().getName();
+				} else if (skullMeta.getOwner() != null && !skullMeta.getOwner().isEmpty()) {
+					targetName = skullMeta.getOwner();
+				}
+			}
+			
 			if (isPlayerHead || loreMatches) {
-				Player target_p = getServer().getPlayer(displayNameStripped);
+				// Try multiple ways to find the target player
+				Player target_p = getServer().getPlayer(targetName);
+				if (target_p == null && !targetName.equals(displayNameStripped)) {
+					target_p = getServer().getPlayer(displayNameStripped);
+				}
+				
 				if (target_p != null) {
-					if (p.getUniqueId() != target_p.getUniqueId()) {
+					// Use .equals() for proper UUID comparison, not != which compares references
+					if (!p.getUniqueId().equals(target_p.getUniqueId())) {
 						Settings.target_player.put(p.getUniqueId(), target_p);
 						if ("actions".equals(Settings.player_selector_mode.getOrDefault(p.getUniqueId(), ""))) {
 							p.openInventory(GUI_Actions(p, target_p));
@@ -1888,26 +1920,29 @@ public class AdminUI {
 							p.openInventory(GUI_Players_Settings(p, target_p, target_p.getName()));
 						}
 					} else {
+						// Clicking on self - also open Players_Settings (punishment menu) 
+						// so admins can test the flow, but Actions mode still works
+						Settings.target_player.put(p.getUniqueId(), p);
 						if ("actions".equals(Settings.player_selector_mode.getOrDefault(p.getUniqueId(), ""))) {
 							p.openInventory(GUI_Actions(p, p));
 							Settings.player_selector_mode.remove(p.getUniqueId());
 						} else {
-							p.openInventory(GUI_Player(p));
+							p.openInventory(GUI_Players_Settings(p, p, p.getName()));
 						}
 					}
-				} else if (AdminGUI.getInstance().getConf().getBoolean("bungeecord_enabled", false) && Settings.online_players.contains(displayNameStripped)) {
+				} else if (AdminGUI.getInstance().getConf().getBoolean("bungeecord_enabled", false) && Settings.online_players.contains(targetName)) {
 					//TODO: Bungee
 					switch (AdminGUI.getInstance().getConf().getInt("control_type", 0)) {
 						case 0:
-							Channel.send(p.getName(), "connect", displayNameStripped);
+							Channel.send(p.getName(), "connect", targetName);
 							break;
 						case 1:
 							Settings.target_player.put(p.getUniqueId(), null);
 							// Can't open Actions for remote player without a live Player object; fall back
-							p.openInventory(GUI_Players_Settings(p, null, displayNameStripped));
+							p.openInventory(GUI_Players_Settings(p, null, targetName));
 							break;
 						default:
-							p.sendMessage(Message.getMessage(p.getUniqueId(), "prefix") + Message.chat("&cPlayer " + displayNameStripped + " is not located in the same server as you."));
+							p.sendMessage(Message.getMessage(p.getUniqueId(), "prefix") + Message.chat("&cPlayer " + targetName + " is not located in the same server as you."));
 							break;
 					}
 				} else {

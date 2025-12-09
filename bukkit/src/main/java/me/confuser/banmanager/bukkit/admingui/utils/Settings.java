@@ -69,7 +69,14 @@ public class Settings {
 	//Freeze
 	public static HashMap<UUID, Boolean> freeze = new HashMap<>();
 
+	//Vanish (built-in)
+	public static HashMap<UUID, Boolean> vanish = new HashMap<>();
+
 	//Maintenance mode
 	public static boolean maintenance_mode = false;
+
+	//Reports GUI
+	public static HashMap<UUID, Integer> reports_page = new HashMap<>();
+	public static HashMap<UUID, String> reports_filter = new HashMap<>();
 
 }
